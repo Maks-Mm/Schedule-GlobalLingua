@@ -1,22 +1,39 @@
 //src/App.tsx
-import useEvents from "../hooks/useEvents"
+
+import useEvents from "./hooks/useEvents"
+
+import Header from "./components/Header"
+import Sidebar from "./components/Sidebar"
+import EventList from "./components/EventList"
+import Toast from "./components/Toast"
 
 function App() {
   const {
     events,
+    editId,
+    saveEvent,
     deleteEvent,
     startEdit
   } = useEvents()
 
   return (
     <div>
-      {events.map(ev => (
-        <div key={ev.id}>
-          <h3>{ev.title}</h3>
-          <button onClick={() => startEdit(ev.id)}>Edit</button>
-          <button onClick={() => deleteEvent(ev.id)}>Delete</button>
-        </div>
-      ))}
+      <Header />
+
+      <div className="app-layout">
+        <Sidebar
+          onSave={saveEvent}
+          editId={editId}
+        />
+
+        <EventList
+          events={events}
+          onEdit={startEdit}
+          onDelete={deleteEvent}
+        />
+      </div>
+
+      <Toast />
     </div>
   )
 }
