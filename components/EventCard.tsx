@@ -1,0 +1,2 @@
+//components/EventCard.tsx
+
