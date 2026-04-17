@@ -264,11 +264,7 @@ button.danger:hover {
 .main-area {
   padding: 20px 24px;
   overflow-y: auto;
-
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZkWjr29GIeB8hWWceLNNzk24guBJF3a-EHg&s');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: #3f4952;
 }
 .events-header {
   display: flex;
@@ -309,54 +305,45 @@ button.danger:hover {
 }
 
 .event-card-3d::before {
-  content: '';
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  border-radius: 24px;
-  padding: 2px;
-  background: linear-gradient(135deg, 
-    rgba(59,130,246,0.3) 0%,
-    rgba(59,130,246,0) 50%,
-    rgba(59,130,246,0.3) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
+  inset: 0;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
+    rgba(59,130,246,0.18),
+    transparent 45%);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
   pointer-events: none;
 }
+
+
 
 .event-card-3d:hover::before {
   opacity: 1;
 }
 
-.event-card-3d:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(59,130,246,0.2);
-}
-
-.event-card-inner {
-  padding: 18px 20px;
-  position: relative;
-  z-index: 1;
-  backdrop-filter: blur(0px);
-  transition: all 0.3s ease;
-}
 
 .event-card-3d:hover .event-card-inner {
   backdrop-filter: blur(2px);
 }
+.event-card-inner {
+  padding: 24px 20px;
+  position: relative;
+  z-index: 1;
+}
 
 /* Gradient mask animation for premium feel */
 .event-card-3d {
-  -webkit-mask: linear-gradient(135deg, #000c 40%, #000, #000c 60%) 100% 100%/250% 250%;
-  mask: linear-gradient(135deg, #000c 40%, #000, #000c 60%) 100% 100%/250% 250%;
-  transition: -webkit-mask-position 0.5s ease, mask-position 0.5s ease, transform 0.3s ease;
-}
+  position: relative;
+  border-radius: 24px;
+  background: rgba(20, 24, 32, 0.55);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
 
+  transform: translateZ(0);
+  transition: transform 0.25s ease, background 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
+  overflow: hidden;
+}
 .event-card-3d:hover {
   -webkit-mask-position: 0 0;
   mask-position: 0 0;
