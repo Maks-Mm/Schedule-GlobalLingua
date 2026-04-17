@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
 import { AVAILABLE_CHANNELS, type ChannelType } from '../types/Channel';
 import { useSchedule } from '../hooks/useSchedule';
-import '../styles/sidebar.css';
 
 type Props = {
   editId: number | null;

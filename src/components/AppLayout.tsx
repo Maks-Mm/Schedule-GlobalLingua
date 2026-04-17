@@ -7,14 +7,17 @@ import EventList from './EventList';
 import Toast from './Toast';
 import { useEvents } from '../hooks/useEvents';
 import type { EventFormData } from '../types/LinguaEvent';
+import ConfirmDialog from './ConfirmDialog';
 
 export default function AppLayout() {
   const { events, addEvent, updateEvent, deleteEvent, moveEventUp, moveEventDown } = useEvents();
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
   const mainAreaRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => { });
 
   // Parallax scroll effect for cards
   useEffect(() => {
@@ -32,13 +35,13 @@ export default function AppLayout() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 3000);
   };
 
-  const filteredEvents = events.filter(ev => 
-    searchTerm === '' || 
+  const filteredEvents = events.filter(ev =>
+    searchTerm === '' ||
     ev.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     (ev.teacher && ev.teacher.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (ev.student && ev.student.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -49,27 +52,27 @@ export default function AppLayout() {
   const handleSave = (formData: EventFormData) => {
     if (editId !== null) {
       updateEvent(editId, formData);
-      showToast('✏️ Veranstaltung aktualisiert');
+      showToast('✏️ Veranstaltung aktualisiert', 'success');
       setEditId(null);
     } else {
       addEvent(formData);
-      showToast('✅ Termin erfolgreich gespeichert');
+      showToast('✅ Termin erfolgreich gespeichert', 'success');
     }
   };
 
   const handleReset = () => {
     setEditId(null);
-    showToast('Formular zurückgesetzt');
+    showToast('Formular zurückgesetzt', 'info');
   };
 
   const handleEdit = (id: number) => {
     setEditId(id);
-    // Smooth scroll to sidebar with better positioning
+    showToast('Bearbeitungsmodus aktiviert', 'info');
     setTimeout(() => {
       const sidebar = document.querySelector('.sidebar');
       if (sidebar) {
-        sidebar.scrollIntoView({ 
-          behavior: 'smooth', 
+        sidebar.scrollIntoView({
+          behavior: 'smooth',
           block: 'start',
           inline: 'nearest'
         });
@@ -78,54 +81,67 @@ export default function AppLayout() {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm('Diesen Termin unwiderruflich löschen?')) {
+    setOnConfirmAction(() => () => {
       deleteEvent(id);
-      showToast('🗑️ Gelöscht');
+      showToast('🗑️ Termin gelöscht', 'error');
+
       if (editId === id) {
         setEditId(null);
       }
-    }
+    });
+
+    setConfirmOpen(true);
   };
 
   const handleMoveUp = (index: number) => {
     moveEventUp(index);
-    showToast('⬆️ Reihenfolge geändert');
+    showToast('⬆️ Reihenfolge geändert', 'info');
   };
 
   const handleMoveDown = (index: number) => {
     moveEventDown(index);
-    showToast('⬇️ Reihenfolge geändert');
+    showToast('⬇️ Reihenfolge geändert', 'info');
   };
 
   return (
     <>
       <div className="bg-animate" />
       <Header />
-      
+
       <div className="app-layout">
         <div ref={sidebarRef}>
-          <Sidebar 
+          <Sidebar
             editId={editId}
             events={events}
             onSave={handleSave}
             onReset={handleReset}
           />
         </div>
-        
+
         <div className="main-area" ref={mainAreaRef}>
           <div className="events-header">
             <h3>📋 Stundenplan</h3>
             <div className="filter-bar">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
               />
             </div>
           </div>
-          
-          <EventList 
+          <ConfirmDialog
+            isOpen={confirmOpen}
+            title="Löschen bestätigen"
+            message="Dieser Termin wird dauerhaft gelöscht."
+            onConfirm={() => {
+              onConfirmAction();
+              setConfirmOpen(false);
+            }}
+            onCancel={() => setConfirmOpen(false)}
+          />
+
+          <EventList
             events={filteredEvents}
             onEdit={handleEdit}
             onDelete={handleDelete}
@@ -134,9 +150,9 @@ export default function AppLayout() {
           />
         </div>
       </div>
-      
+
       {toast && (
-        <Toast 
+        <Toast
           message={toast.message}
           type={toast.type}
           onClose={() => setToast(null)}
