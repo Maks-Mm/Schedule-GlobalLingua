@@ -1,0 +1,174 @@
+# Schedule Orchestrator – README
+
+## Overview
+
+Schedule Orchestrator ist ein spezialisiertes Planungssystem zur Vermeidung von organisatorischem Chaos in Online-Unterrichtsszenarien. Der Fokus liegt nicht auf Kommunikation selbst, sondern auf der strukturierten Koordination von Zeit, Teilnehmern und Plattformen.
+
+Das System adressiert typische Probleme:
+
+* verlorene Nachrichten mit Terminzeiten
+* fehlende Synchronisation zwischen Lehrer, Schüler und Manager
+* Zeitzonenkonflikte
+* unklare Plattformwahl (Zoom, Skype, WhatsApp etc.)
+* doppelte oder vergessene Termine
+
+## Core Concept
+
+Das Produkt fungiert als Orchestrator zwischen:
+
+* Terminlogik (Kalender + Verfügbarkeit)
+* Teilnehmerrollen (Manager, Lehrer, Schüler)
+* Kommunikationsplattformen (nur als Ausführungsziel)
+
+Keine direkte Kommunikation, sondern zentrale Steuerung.
+
+## Features (Prototype Scope)
+
+### 1. Event Management (CRUD)
+
+* Erstellen von Lektionen (Titel, Lehrer, Schüler, Zeit)
+* Bearbeiten bestehender Termine
+* Löschen von Terminen
+* Neuordnung (Priorität / Reihenfolge)
+
+### 2. Persistence
+
+* Speicherung im LocalStorage (Prototype)
+* Erweiterbar auf Backend (z. B. PostgreSQL)
+
+### 3. Account Data
+
+* Manager-/Account-Daten
+* Adresse / Standort (optional für Schule)
+
+### 4. Scheduling Logic (Planned)
+
+* Konflikterkennung (Lehrer doppelt gebucht)
+* Multi-Teilnehmer-Zuordnung
+* Zeitvalidierung
+
+### 5. Time Handling
+
+* Aktuell lokal (Prototype)
+* Ziel: vollständige UTC-Normalisierung
+* Darstellung je Benutzer-Zeitzone
+
+### 6. Notification System (Stub)
+
+* Erfolgsbestätigung („Saved successfully“)
+* Geplant:
+
+  * Reminder (24h / 1h)
+  * Neue Lektion Warnung
+  * Änderungen / Verschiebungen
+
+### 7. Platform Abstraction
+
+Unterstützte Kanäle (nur Auswahl im Prototype):
+
+* Zoom
+* Google Meet
+* Skype
+* WhatsApp
+* Viber
+
+Ziel:
+Einheitliche Schnittstelle für Meeting-Erstellung unabhängig von Plattform.
+
+### 8. UI / UX
+
+* Minimalistisches Dashboard
+* Rollenbasierte Nutzung (Manager-first)
+* Animierter Hintergrund (visuelle Differenzierung)
+* Inline Editing
+
+## Architecture (Target)
+
+### Frontend
+
+* HTML / CSS / Vanilla JS (Prototype)
+* Später: React / Next.js
+
+### Backend (Planned)
+
+* REST oder event-driven API
+* Datenbank: PostgreSQL
+* Queue-System für Reminder
+
+### Data Model (simplified)
+
+```
+Event {
+  id
+  title
+  teacher
+  student
+  datetime (UTC planned)
+  channel
+  account
+  address
+}
+```
+
+## Product Positioning
+
+Nicht:
+
+* Messenger
+* generischer Kalender
+
+Sondern:
+
+* Chaos-Vermeidungssystem für Unterrichtsplanung
+* Vertical SaaS für Sprachschulen
+
+## Market Fit
+
+Zielgruppen:
+
+* Sprachschulen
+* private Lehrer
+* Online-Tutoring-Netzwerke
+* Manager / Vermittler
+
+Erweiterbar auf:
+
+* Coaching
+* Beratung
+* medizinische Terminplanung (ähnliche Struktur)
+
+## Monetization (Planned)
+
+* SaaS-Modell (Subscription)
+* B2B (Schulen / Organisationen)
+* Freemium für Einzelpersonen
+
+## Roadmap
+
+Phase 1:
+
+* Lokaler Prototyp (HTML/JS)
+
+Phase 2:
+
+* Backend + Authentifizierung
+* UTC-Zeitlogik
+* Konflikterkennung
+
+Phase 3:
+
+* API-Integrationen (Zoom, Google Calendar)
+* Multi-User System
+
+Phase 4:
+
+* Skalierung + SaaS Deployment
+* Veröffentlichung (Web, Android, iOS)
+
+## Key Insight
+
+Der Wert entsteht nicht durch Features, sondern durch:
+Fehlerreduktion in der Terminorganisation.
+
+Das System ersetzt kein Tool.
+Es reduziert operative Verluste zwischen mehreren Tools.
