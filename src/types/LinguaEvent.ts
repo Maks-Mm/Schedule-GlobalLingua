@@ -1,6 +1,8 @@
 //src/types/LinguaEvent.ts
 
 
+import type { ChannelType } from '../types/Channel';
+
 export interface LinguaEvent {
   id: number;
   account: string;
@@ -8,7 +10,7 @@ export interface LinguaEvent {
   title: string;
   teacher: string;
   student: string;
-  channel: string;
+  channel: ChannelType; // Changed from string to ChannelType
   datetime: string;
   createdAt: string;
 }

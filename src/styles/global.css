@@ -9,12 +9,14 @@
 }
 
 body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+ margin: 0;
+  /* Updated to Plus Jakarta Sans */
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background: #0a0c10;
   color: var(--text);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 
@@ -113,7 +115,7 @@ body {
 
 /* Header styles */
 .glass-header {
-  backdrop-filter: blur(12px);
+ backdrop-filter: blur(12px);
   background: rgba(15, 18, 25, 0.75);
   border-bottom: 1px solid rgba(59,130,246,0.3);
   padding: 16px 24px;
@@ -131,13 +133,13 @@ body {
 }
 
 .logo {
-  font-weight: 700;
+  font-weight: 800; /* Extra bold for the brand */
   font-size: 1.6rem;
   background: linear-gradient(135deg, #fff, #7aa9ff);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.03em;
 }
 
 .badge {
@@ -174,16 +176,18 @@ body {
   padding: 18px;
   margin-bottom: 24px;
   transition: all 0.2s;
+  color:white;
 }
 
 .card h3 {
-  font-size: 1rem;
-  font-weight: 500;
+ font-size: 0.95rem;
+  font-weight: 600; /* Semi-bold for dashboard headers */
   margin-bottom: 14px;
   display: flex;
   align-items: center;
   gap: 8px;
   color: #ccddf8;
+  letter-spacing: -0.01em;
 }
 
 .input-group {
@@ -191,13 +195,13 @@ body {
 }
 
 label {
-  font-size: 0.7rem;
+  font-size: 0.65rem; /* Slightly smaller since Jakarta is wider */
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
+  letter-spacing: 0.08em; /* More space for the all-caps labels */
+  font-weight: 700;
   color: var(--text-muted);
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 input, select {
@@ -209,6 +213,9 @@ input, select {
   color: white;
   font-size: 0.9rem;
   transition: 0.2s;
+}
+input, select, button {
+  font-family: 'Plus Jakarta Sans', sans-serif; /* Ensure inputs use the font */
 }
 
 input:focus, select:focus {
@@ -272,14 +279,15 @@ button.danger:hover {
   align-items: baseline;
   margin-bottom: 20px;
   flex-wrap: wrap;
+  color:white;
 }
 
 .filter-bar {
   display: flex;
   gap: 12px;
-  background: rgba(0,0,0,0.3);
   padding: 6px 12px;
   border-radius: 60px;
+  color:white;
 }
 
 .filter-bar input {
@@ -370,12 +378,14 @@ button.danger:hover {
 }
 
 .event-title {
-  font-size: 1.25rem;
+ font-size: 1.2rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   margin-bottom: 8px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+  color: white;
 }
 
 .event-meta {
@@ -388,12 +398,15 @@ button.danger:hover {
 }
 
 .meta-chip {
+ font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
   background: #1e2a3a;
   padding: 4px 12px;
   border-radius: 40px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  font-size: 0.75rem;
 }
 
 .event-actions {
@@ -529,8 +542,10 @@ button.danger:hover {
 }
 
 .hero-content h1 {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: -0.04em;
   font-size: 4rem;
-  font-weight: 700;
+  font-weight: 800;
   color: white;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #fff, #7aa9ff);
@@ -619,3 +634,4 @@ button.danger:hover {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+

@@ -3,6 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
+import { AVAILABLE_CHANNELS, type ChannelType } from '../types/Channel';
+import   { useSchedule } from '../hooks/useSchedule';
 
 type Props = {
   editId: number | null;
@@ -11,18 +13,20 @@ type Props = {
   onReset: () => void;
 };
 
-const CHANNELS = ['Zoom', 'Google Meet', 'Skype', 'WhatsApp', 'Viber', 'Microsoft Teams', 'FaceTime'];
-
 export default function Sidebar({ editId, events, onSave, onReset }: Props) {
+  const { isSlotAvailable, getEventsCountForDay, maxSlotsPerDay } = useSchedule(events);
+  
   const [form, setForm] = useState<EventFormData>({
     account: '',
     address: '',
     title: '',
     teacher: '',
     student: '',
-    channel: 'Zoom',
+    channel: 'zoom',
     datetime: ''
   });
+
+  const [dayWarning, setDayWarning] = useState<string | null>(null);
 
   useEffect(() => {
     if (editId === null) {
@@ -32,9 +36,10 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         title: '',
         teacher: '',
         student: '',
-        channel: 'Zoom',
+        channel: 'zoom',
         datetime: ''
       });
+      setDayWarning(null);
       return;
     }
     
@@ -53,6 +58,19 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
   }, [editId, events]);
 
   const updateField = <K extends keyof EventFormData>(key: K, value: string) => {
+    if (key === 'datetime') {
+      const day = value.split('T')[0];
+      if (day && !editId) {
+        const currentCount = getEventsCountForDay(day);
+        if (currentCount >= maxSlotsPerDay) {
+          setDayWarning(`⚠️ Dieser Tag hat bereits ${currentCount}/${maxSlotsPerDay} Einheiten. Keine weiteren Termine möglich.`);
+        } else {
+          setDayWarning(null);
+        }
+      } else {
+        setDayWarning(null);
+      }
+    }
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
@@ -65,7 +83,31 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
       alert('Datum & Uhrzeit erforderlich');
       return;
     }
+
+    if (!isSlotAvailable(form.datetime)) {
+      const day = form.datetime.split('T')[0];
+      const count = getEventsCountForDay(day);
+      alert(`❌ Keine Kapazität mehr am ${day}\nBereits ${count}/${maxSlotsPerDay} Unterrichtseinheiten gebucht.\nBitte wählen Sie einen anderen Tag.`);
+      return;
+    }
+
+    if (editId !== null) {
+      const originalEvent = events.find(e => e.id === editId);
+      if (originalEvent && originalEvent.datetime !== form.datetime) {
+        if (!isSlotAvailable(form.datetime)) {
+          alert('❌ Der neue Termin ist an einem bereits ausgebuchten Tag.\nBitte wählen Sie einen anderen Tag.');
+          return;
+        }
+      }
+    }
+
     onSave(form);
+  };
+
+  const systemStatus = {
+    orchestrator: true,
+    storage: events.length > 0,
+    activeConstraints: `Max ${maxSlotsPerDay} Einheiten/Tag`
   };
 
   return (
@@ -120,8 +162,12 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         </div>
         <div className="input-group">
           <label>🎥 Plattform</label>
-          <select value={form.channel} onChange={e => updateField('channel', e.target.value)}>
-            {CHANNELS.map(ch => <option key={ch}>{ch}</option>)}
+          <select value={form.channel} onChange={e => updateField('channel', e.target.value as ChannelType)}>
+            {AVAILABLE_CHANNELS.map(ch => (
+              <option key={ch.type} value={ch.type}>
+                {ch.icon} {ch.label}
+              </option>
+            ))}
           </select>
         </div>
         <div className="input-group">
@@ -131,6 +177,11 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
             value={form.datetime} 
             onChange={e => updateField('datetime', e.target.value)}
           />
+          {dayWarning && (
+            <div style={{ color: '#f59e0b', fontSize: '12px', marginTop: '4px' }}>
+              {dayWarning}
+            </div>
+          )}
         </div>
         <div className="button-group">
           <button className="primary" onClick={handleSubmit}>💾 Speichern</button>
@@ -138,29 +189,36 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         </div>
       </div>
 
-      {/* Add after the existing card */}
-<div className="card system-status">
-  <h3>⚙️ System Status</h3>
-  <div className="status-item">
-    <span>Orchestrator Mode</span>
-    <span className="status-active">● Active</span>
-  </div>
-  <div className="status-item">
-    <span>Local Storage</span>
-    <span className="status-active">● Synced</span>
-  </div>
-  <div className="status-item">
-    <span>Timezone</span>
-    <span>{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
-  </div>
-  <div className="status-note">
-    ⚡ Preventing scheduling chaos since 2024
-  </div>
-</div>
+      <div className="card system-status">
+        <h3>⚙️ System Status</h3>
+        <div className="status-item">
+          <span>Orchestrator Mode</span>
+          <span className={systemStatus.orchestrator ? "status-active" : "status-inactive"}>
+            {systemStatus.orchestrator ? '● Active' : '○ Inactive'}
+          </span>
+        </div>
+        <div className="status-item">
+          <span>Local Storage</span>
+          <span className={systemStatus.storage ? "status-active" : "status-inactive"}>
+            {systemStatus.storage ? '● Synced' : '○ Empty'}
+          </span>
+        </div>
+        <div className="status-item">
+          <span>Constraint</span>
+          <span className="status-info">{systemStatus.activeConstraints}</span>
+        </div>
+        <div className="status-item">
+          <span>Timezone</span>
+          <span>{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
+        </div>
+        <div className="status-note">
+          ⚡ Aktive Scheduling-Regeln: Max {maxSlotsPerDay} Einheiten pro Tag
+        </div>
+      </div>
 
       <div className="card small">
         <div style={{ fontSize: '12px', opacity: 0.7 }}>
-          ✨ Features: Sortieren via Drag & Drop (Up/Down), Suche, Echtzeit-Statistik, Benachrichtigungen, lokale Speicherung
+          ✨ Features: Automatische Kapazitätsprüfung, Konflikterkennung, Echtzeit-Validierung, lokale Speicherung
         </div>
       </div>
     </div>
