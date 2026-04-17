@@ -1,5 +1,6 @@
 //components/EventCard.tsx
 
+import { useState } from 'react';
 import type { LinguaEvent } from '../types/LinguaEvent';
 
 type Props = {
@@ -47,31 +48,76 @@ export default function EventCard({
   onMoveUp, 
   onMoveDown 
 }: Props) {
+  const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isHovering) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Calculate rotation based on mouse position (-8 to 8 degrees)
+    const rotateX = ((y - rect.height / 2) / rect.height) * 8;
+    const rotateY = ((x - rect.width / 2) / rect.width) * -8;
+    
+    setRotation({ x: rotateX, y: rotateY });
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+    setRotation({ x: 0, y: 0 });
+  };
+
   return (
-    <div className="event-card">
-      <div className="event-title">
-        <strong>📘 {escapeHtml(event.title)}</strong>
-        <span style={{ fontSize: '0.7rem', background: '#2d3748', padding: '2px 10px', borderRadius: '30px' }}>
-          {event.channel || '—'}
-        </span>
-      </div>
-      <div className="event-meta">
-        <span className="meta-chip">
-          🏫 {escapeHtml(event.account) || 'Kein Account'} {event.address ? '· ' + escapeHtml(event.address) : ''}
-        </span>
-        <span className="meta-chip">👩‍🏫 {escapeHtml(event.teacher) || 'nicht zugewiesen'}</span>
-        <span className="meta-chip">🧑‍🎓 {escapeHtml(event.student) || '—'}</span>
-        <span className="meta-chip">⏰ {formatDateTime(event.datetime)}</span>
-      </div>
-      <div className="event-actions">
-        <button className="secondary" onClick={() => onEdit(event.id)}>✏️ Bearbeiten</button>
-        <button className="danger" onClick={() => onDelete(event.id)}>🗑️ Löschen</button>
-        {index > 0 && (
-          <button className="secondary" onClick={() => onMoveUp(index)}>⬆️ Nach oben</button>
-        )}
-        {index < totalEvents - 1 && (
-          <button className="secondary" onClick={() => onMoveDown(index)}>⬇️ Nach unten</button>
-        )}
+    <div 
+      className="event-card-3d"
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        transform: isHovering 
+          ? `perspective(400px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
+          : 'perspective(400px) rotateX(0deg) rotateY(0deg)',
+        transition: 'transform 0.3s ease',
+      }}
+    >
+      <div className="event-card-inner">
+        <div className="event-title">
+          <strong>📘 {escapeHtml(event.title)}</strong>
+          <span className="channel-badge">
+            {event.channel || '—'}
+          </span>
+        </div>
+        
+        <div className="event-meta">
+          <span className="meta-chip">
+            🏫 {escapeHtml(event.account) || 'Kein Account'} {event.address ? '· ' + escapeHtml(event.address) : ''}
+          </span>
+          <span className="meta-chip">👩‍🏫 {escapeHtml(event.teacher) || 'nicht zugewiesen'}</span>
+          <span className="meta-chip">🧑‍🎓 {escapeHtml(event.student) || '—'}</span>
+          <span className="meta-chip">⏰ {formatDateTime(event.datetime)}</span>
+        </div>
+        
+        <div className="event-actions">
+          <button className="btn-secondary" onClick={() => onEdit(event.id)}>
+            ✏️ Bearbeiten
+          </button>
+          <button className="btn-danger" onClick={() => onDelete(event.id)}>
+            🗑️ Löschen
+          </button>
+          {index > 0 && (
+            <button className="btn-secondary" onClick={() => onMoveUp(index)}>
+              ⬆️ Nach oben
+            </button>
+          )}
+          {index < totalEvents - 1 && (
+            <button className="btn-secondary" onClick={() => onMoveDown(index)}>
+              ⬇️ Nach unten
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
+/* ALL @import statements MUST be at the very top */
 @import './variables.css';
 
+/* Your existing styles below */
 * {
   margin: 0;
   padding: 0;
@@ -9,11 +11,12 @@
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-  background: radial-gradient(circle at 10% 20%, #0f1117, #05070c);
+  background: white;
   color: var(--text);
   min-height: 100vh;
 }
 
+/* Rest of your CSS remains exactly the same from here... */
 .bg-animate {
   position: fixed;
   top: 0;
@@ -23,6 +26,7 @@ body {
   z-index: -2;
   background: linear-gradient(125deg, #0b0e17 0%, #11161f 40%, #0a0c14 100%);
 }
+
 
 .bg-animate::after {
   content: '';
@@ -60,7 +64,7 @@ body {
   background: var(--accent);
 }
 
-/* Add to global.css or create App.css */
+/* Header styles */
 .glass-header {
   backdrop-filter: blur(12px);
   background: rgba(15, 18, 25, 0.75);
@@ -97,6 +101,7 @@ body {
   color: #b9c8ff;
 }
 
+/* Layout */
 .app-layout {
   display: grid;
   grid-template-columns: 360px 1fr;
@@ -237,19 +242,93 @@ button.danger:hover {
   background: #0f121b;
 }
 
-.event-card {
+/* 3D Event Card Styles */
+.event-card-3d {
   background: linear-gradient(105deg, #161c26 0%, #11161f 100%);
   border-radius: 24px;
-  padding: 18px 20px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   border-left: 4px solid var(--accent);
-  transition: all 0.2s;
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --a: 8deg;
+  --r: 1, -1;
 }
 
-.event-card:hover {
-  transform: translateX(3px);
-  background: #1a212e;
+.event-card-3d::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 24px;
+  padding: 2px;
+  background: linear-gradient(135deg, 
+    rgba(59,130,246,0.3) 0%,
+    rgba(59,130,246,0) 50%,
+    rgba(59,130,246,0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.event-card-3d:hover::before {
+  opacity: 1;
+}
+
+.event-card-3d:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(59,130,246,0.2);
+}
+
+.event-card-inner {
+  padding: 18px 20px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(0px);
+  transition: all 0.3s ease;
+}
+
+.event-card-3d:hover .event-card-inner {
+  backdrop-filter: blur(2px);
+}
+
+/* Gradient mask animation for premium feel */
+.event-card-3d {
+  -webkit-mask: linear-gradient(135deg, #000c 40%, #000, #000c 60%) 100% 100%/250% 250%;
+  mask: linear-gradient(135deg, #000c 40%, #000, #000c 60%) 100% 100%/250% 250%;
+  transition: -webkit-mask-position 0.5s ease, mask-position 0.5s ease, transform 0.3s ease;
+}
+
+.event-card-3d:hover {
+  -webkit-mask-position: 0 0;
+  mask-position: 0 0;
+}
+
+/* Alternate gradient for even cards */
+.event-card-3d:nth-child(even) {
+  --r: 1, 1;
+  -webkit-mask: linear-gradient(45deg, #000c 40%, #000, #000c 60%) 0 100%/250% 250%;
+  mask: linear-gradient(45deg, #000c 40%, #000, #000c 60%) 0 100%/250% 250%;
+}
+
+.event-card-3d:nth-child(even):hover {
+  -webkit-mask-position: 100% 0;
+  mask-position: 100% 0;
+}
+
+.channel-badge {
+  font-size: 0.7rem;
+  background: #2d3748;
+  padding: 2px 10px;
+  border-radius: 30px;
+  display: inline-block;
 }
 
 .event-title {
@@ -308,6 +387,59 @@ button.danger:hover {
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
   z-index: 1000;
   transition: 0.2s;
+}
+
+/* Enhanced button styles */
+.btn-secondary {
+  border: none;
+  border-radius: 40px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #2a2f3c;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #3f4758;
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  border: none;
+  border-radius: 40px;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(239,68,68,0.85);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+}
+
+/* Loading animation for cards */
+@keyframes cardGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(59,130,246,0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59,130,246,0.4);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(59,130,246,0.2);
+  }
+}
+
+.event-card-3d:focus {
+  animation: cardGlow 1s ease-in-out;
+  outline: none;
 }
 
 @media (max-width: 760px) {

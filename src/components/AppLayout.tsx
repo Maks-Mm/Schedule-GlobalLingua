@@ -1,6 +1,6 @@
 //src/components/AppLayout.tsx
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Add useEffect to the import
 import Header from './Header';
 import Sidebar from './Sidebar';
 import EventList from './EventList';
@@ -13,6 +13,22 @@ export default function AppLayout() {
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+
+  // Add the parallax scroll effect here
+  useEffect(() => {
+    const handleScroll = () => {
+      const cards = document.querySelectorAll('.event-card-3d');
+      cards.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const scrollPosition = window.scrollY;
+        const offset = (rect.top - scrollPosition) * 0.05;
+        (card as HTMLElement).style.transform = `translateY(${offset}px)`;
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); // Empty dependency array means this runs once when component mounts
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
