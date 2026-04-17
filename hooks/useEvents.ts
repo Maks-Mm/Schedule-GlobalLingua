@@ -1,6 +1,6 @@
 // hooks/useEvents.ts
 import { useEffect, useState } from "react"
-import type { LinguaEvent } from "../types/LinguaEvent"
+import type { LinguaEvent } from "../src/types/LinguaEvent"
 
 export default function useEvents() {
   const [events, setEvents] = useState<LinguaEvent[]>([])

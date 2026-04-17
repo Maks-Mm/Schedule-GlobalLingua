@@ -1,61 +1,148 @@
-//components/Sidebar.tsx
-import { useState } from "react"
-import type { LinguaEvent } from "../types/LinguaEvent"
+// Sidebar.tsx (pattern)
+
+
+import { useState, useEffect } from 'react';
+import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
 
 type Props = {
-  onSave: (event: LinguaEvent) => void
-  editId: number | null
-}
+  editId: number | null;
+  events: LinguaEvent[];
+  onSave: (data: EventFormData) => void;
+  onReset: () => void;
+};
 
-export default function Sidebar({ onSave }: Props) {
-  const [title, setTitle] = useState("")
-  const [teacher, setTeacher] = useState("")
-  const [student, setStudent] = useState("")
-  const [channel, setChannel] = useState("Zoom")
-  const [datetime, setDatetime] = useState("")
+const CHANNELS = ['Zoom', 'Google Meet', 'Skype', 'WhatsApp', 'Viber', 'Microsoft Teams', 'FaceTime'];
 
-  function submit() {
-    if (!title || !datetime) return
+export default function Sidebar({ editId, events, onSave, onReset }: Props) {
+  const [form, setForm] = useState<EventFormData>({
+    account: '',
+    address: '',
+    title: '',
+    teacher: '',
+    student: '',
+    channel: 'Zoom',
+    datetime: ''
+  });
 
-    const event: LinguaEvent = {
-      id: Date.now(),
-      account: "",
-      address: "",
-      title,
-      teacher,
-      student,
-      channel,
-      datetime,
-      createdAt: new Date().toISOString()
+  useEffect(() => {
+    if (editId === null) {
+      setForm({
+        account: '',
+        address: '',
+        title: '',
+        teacher: '',
+        student: '',
+        channel: 'Zoom',
+        datetime: ''
+      });
+      return;
     }
+    
+    const ev = events.find(e => e.id === editId);
+    if (ev) {
+      setForm({
+        account: ev.account,
+        address: ev.address,
+        title: ev.title,
+        teacher: ev.teacher,
+        student: ev.student,
+        channel: ev.channel,
+        datetime: ev.datetime
+      });
+    }
+  }, [editId, events]);
 
-    onSave(event)
+  const updateField = <K extends keyof EventFormData>(key: K, value: string) => {
+    setForm(prev => ({ ...prev, [key]: value }));
+  };
 
-    setTitle("")
-    setTeacher("")
-    setStudent("")
-    setDatetime("")
-  }
+  const handleSubmit = () => {
+    if (!form.title.trim()) {
+      alert('Bitte Titel eingeben');
+      return;
+    }
+    if (!form.datetime) {
+      alert('Datum & Uhrzeit erforderlich');
+      return;
+    }
+    onSave(form);
+  };
 
   return (
-    <aside className="sidebar">
+    <div className="sidebar">
       <div className="card">
-        <h3>Event Form</h3>
-
-        <input placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
-        <input placeholder="Teacher" value={teacher} onChange={e => setTeacher(e.target.value)} />
-        <input placeholder="Student" value={student} onChange={e => setStudent(e.target.value)} />
-
-        <select value={channel} onChange={e => setChannel(e.target.value)}>
-          <option>Zoom</option>
-          <option>Google Meet</option>
-          <option>Teams</option>
-        </select>
-
-        <input type="datetime-local" value={datetime} onChange={e => setDatetime(e.target.value)} />
-
-        <button onClick={submit}>Save</button>
+        <h3>🏫 Account & Standort</h3>
+        <div className="input-group">
+          <label>Manager / Account</label>
+          <input 
+            value={form.account} 
+            onChange={e => updateField('account', e.target.value)}
+            placeholder="z.B. Sprachzentrum Berlin"
+            autoComplete="off"
+          />
+        </div>
+        <div className="input-group">
+          <label>Adresse / Schule</label>
+          <input 
+            value={form.address} 
+            onChange={e => updateField('address', e.target.value)}
+            placeholder="Straße, Ort, Raum"
+            autoComplete="off"
+          />
+        </div>
       </div>
-    </aside>
-  )
+
+      <div className="card">
+        <h3>✏️ {editId ? 'Bearbeitungsmodus' : 'Neue Unterrichtseinheit'}</h3>
+        <div className="input-group">
+          <label>📖 Titel *</label>
+          <input 
+            value={form.title} 
+            onChange={e => updateField('title', e.target.value)}
+            placeholder="z.B. Englisch B2 Konversation"
+          />
+        </div>
+        <div className="input-group">
+          <label>👩‍🏫 Lehrer:in</label>
+          <input 
+            value={form.teacher} 
+            onChange={e => updateField('teacher', e.target.value)}
+            placeholder="Name"
+          />
+        </div>
+        <div className="input-group">
+          <label>🧑‍🎓 Schüler:in</label>
+          <input 
+            value={form.student} 
+            onChange={e => updateField('student', e.target.value)}
+            placeholder="Name / Gruppe"
+          />
+        </div>
+        <div className="input-group">
+          <label>🎥 Plattform</label>
+          <select value={form.channel} onChange={e => updateField('channel', e.target.value)}>
+            {CHANNELS.map(ch => <option key={ch}>{ch}</option>)}
+          </select>
+        </div>
+        <div className="input-group">
+          <label>📅 Datum & Uhrzeit *</label>
+          <input 
+            type="datetime-local" 
+            value={form.datetime} 
+            onChange={e => updateField('datetime', e.target.value)}
+          />
+        </div>
+        <div className="button-group">
+          <button className="primary" onClick={handleSubmit}>💾 Speichern</button>
+          <button className="secondary" onClick={onReset}>🗑️ Zurücksetzen</button>
+        </div>
+      </div>
+
+      <div className="card small">
+        <div style={{ fontSize: '12px', opacity: 0.7 }}>
+          ✨ Features: Sortieren via Drag & Drop (Up/Down), Suche, Echtzeit-Statistik, Benachrichtigungen, lokale Speicherung
+        </div>
+      </div>
+    </div>
+  );
 }

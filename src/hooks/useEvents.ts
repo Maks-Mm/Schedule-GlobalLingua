@@ -1,38 +1,87 @@
-//src/hooks/useEvents.ts
-import { useEffect, useState } from "react"
-import type { LinguaEvent } from "../types/LinguaEvent"
+// src/hooks/useEvents.ts
 
-export default function useEvents() {
-  const [events, setEvents] = useState<LinguaEvent[]>([])
-  const [editId, setEditId] = useState<number | null>(null)
 
-  useEffect(() => {
-    const data = localStorage.getItem("lingua_events")
-    if (data) setEvents(JSON.parse(data))
-  }, [])
+import { useState, useEffect } from 'react';
+import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
+
+const STORAGE_KEY = 'lingua_events';
+
+export function useEvents() {
+  const [events, setEvents] = useState<LinguaEvent[]>([]);
 
   useEffect(() => {
-    localStorage.setItem("lingua_events", JSON.stringify(events))
-  }, [events])
-
-  function saveEvent(event: LinguaEvent) {
-    if (editId !== null) {
-      setEvents(prev =>
-        prev.map(e => (e.id === editId ? event : e))
-      )
-      setEditId(null)
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      setEvents(JSON.parse(stored));
     } else {
-      setEvents(prev => [...prev, event])
+      // Add demo event if empty
+      const demoEvent: LinguaEvent = {
+        id: 1001,
+        account: 'GlobalLingua Academy',
+        address: 'Online / Virtual Classroom',
+        title: '🇬🇧 Business English Intensiv',
+        teacher: 'Ms. Thompson',
+        student: 'Advanced Group A',
+        channel: 'Zoom',
+        datetime: new Date(Date.now() + 86400000).toISOString().slice(0, 16),
+        createdAt: new Date().toISOString()
+      };
+      setEvents([demoEvent]);
     }
-  }
+  }, []);
 
-  function deleteEvent(id: number) {
-    setEvents(prev => prev.filter(e => e.id !== id))
-  }
+  useEffect(() => {
+    if (events.length > 0) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+    }
+  }, [events]);
 
-  function startEdit(id: number) {
-    setEditId(id)
-  }
+  const addEvent = (eventData: EventFormData) => {
+    const newEvent: LinguaEvent = {
+      ...eventData,
+      id: Date.now(),
+      createdAt: new Date().toISOString()
+    };
+    setEvents(prev => [...prev, newEvent]);
+    return newEvent;
+  };
 
-  return { events, editId, saveEvent, deleteEvent, startEdit }
+  const updateEvent = (id: number, eventData: EventFormData) => {
+    setEvents(prev => prev.map(event => 
+      event.id === id 
+        ? { ...eventData, id, createdAt: event.createdAt }
+        : event
+    ));
+  };
+
+  const deleteEvent = (id: number) => {
+    setEvents(prev => prev.filter(event => event.id !== id));
+  };
+
+  const moveEventUp = (index: number) => {
+    if (index <= 0) return;
+    setEvents(prev => {
+      const newEvents = [...prev];
+      [newEvents[index - 1], newEvents[index]] = [newEvents[index], newEvents[index - 1]];
+      return newEvents;
+    });
+  };
+
+  const moveEventDown = (index: number) => {
+    if (index >= events.length - 1) return;
+    setEvents(prev => {
+      const newEvents = [...prev];
+      [newEvents[index + 1], newEvents[index]] = [newEvents[index], newEvents[index + 1]];
+      return newEvents;
+    });
+  };
+
+  return {
+    events,
+    addEvent,
+    updateEvent,
+    deleteEvent,
+    moveEventUp,
+    moveEventDown
+  };
 }

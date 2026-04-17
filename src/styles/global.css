@@ -1,7 +1,326 @@
+@import './variables.css';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+  background: radial-gradient(circle at 10% 20%, #0f1117, #05070c);
+  color: var(--text);
   min-height: 100vh;
-  font-family: system-ui, sans-serif;
-  background: #0a0c10;
-  color: #edf2f8;
+}
+
+.bg-animate {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: linear-gradient(125deg, #0b0e17 0%, #11161f 40%, #0a0c14 100%);
+}
+
+.bg-animate::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle at 30% 40%, rgba(59,130,246,0.08), transparent 70%);
+  animation: slowDrift 22s infinite alternate;
+}
+
+@keyframes slowDrift {
+  0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.4; }
+  100% { transform: translate(4%, 6%) rotate(3deg); opacity: 0.9; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Add to global.css or create App.css */
+.glass-header {
+  backdrop-filter: blur(12px);
+  background: rgba(15, 18, 25, 0.75);
+  border-bottom: 1px solid rgba(59,130,246,0.3);
+  padding: 16px 24px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.logo-area {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #fff, #7aa9ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.3px;
+}
+
+.badge {
+  font-size: 0.7rem;
+  background: #2d3748;
+  padding: 4px 10px;
+  border-radius: 40px;
+  color: #b9c8ff;
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 0;
+  height: calc(100vh - 76px);
+  overflow: hidden;
+}
+
+.sidebar {
+  background: rgba(10, 12, 18, 0.7);
+  backdrop-filter: blur(4px);
+  border-right: 1px solid var(--border);
+  padding: 20px 16px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.card {
+  background: rgba(30, 34, 43, 0.75);
+  backdrop-filter: blur(4px);
+  border: 1px solid #2a2f3c;
+  border-radius: 24px;
+  padding: 18px;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+}
+
+.card h3 {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ccddf8;
+}
+
+.input-group {
+  margin-bottom: 14px;
+}
+
+label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  background: #0f121b;
+  border: 1px solid #2a2f3c;
+  border-radius: 16px;
+  color: white;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+}
+
+button {
+  border: none;
+  border-radius: 40px;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+  background: #2d3748;
+  color: white;
+}
+
+button.primary {
+  background: var(--accent);
+  box-shadow: 0 2px 8px rgba(59,130,246,0.3);
+}
+
+button.primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+
+button.danger {
+  background: rgba(239,68,68,0.85);
+}
+
+button.danger:hover {
+  background: #dc2626;
+}
+
+.secondary {
+  background: #2a2f3c;
+}
+
+.secondary:hover {
+  background: #3f4758;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.main-area {
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.events-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  background: rgba(0,0,0,0.3);
+  padding: 6px 12px;
+  border-radius: 60px;
+}
+
+.filter-bar input {
+  width: 200px;
+  padding: 8px 14px;
+  margin: 0;
+  background: #0f121b;
+}
+
+.event-card {
+  background: linear-gradient(105deg, #161c26 0%, #11161f 100%);
+  border-radius: 24px;
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid var(--accent);
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.event-card:hover {
+  transform: translateX(3px);
+  background: #1a212e;
+}
+
+.event-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.event-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 12px 0 8px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.meta-chip {
+  background: #1e2a3a;
+  padding: 4px 12px;
+  border-radius: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.event-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255,255,255,0.02);
+  border-radius: 48px;
+  color: #6c7a91;
+}
+
+.toast-modern {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: #1f2a3e;
+  backdrop-filter: blur(12px);
+  border-left: 3px solid var(--success);
+  padding: 12px 24px;
+  border-radius: 60px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  z-index: 1000;
+  transition: 0.2s;
+}
+
+@media (max-width: 760px) {
+  .app-layout {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .glass-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
