@@ -16,7 +16,7 @@ export default function HeroBackground({ children, backgroundImage }: HeroProps)
       setImageUrl(backgroundImage);
     } else {
       // Premium education/language learning background
-      setImageUrl('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070&auto=format&fit=crop');
+      setImageUrl('/public/Gemini_Generated_Image_1pw3oe1pw3oe1pw3.png');
     }
   }, [backgroundImage]);
 
