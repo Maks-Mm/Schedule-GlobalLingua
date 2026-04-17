@@ -1,10 +1,10 @@
-// Sidebar.tsx (pattern)
-
+//src/components/Sidebar.tsx
 
 import { useState, useEffect } from 'react';
 import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
 import { AVAILABLE_CHANNELS, type ChannelType } from '../types/Channel';
-import   { useSchedule } from '../hooks/useSchedule';
+import { useSchedule } from '../hooks/useSchedule';
+import '../styles/sidebar.css';
 
 type Props = {
   editId: number | null;
@@ -27,6 +27,7 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
   });
 
   const [dayWarning, setDayWarning] = useState<string | null>(null);
+  const [isDayFull, setIsDayFull] = useState(false);
 
   useEffect(() => {
     if (editId === null) {
@@ -40,9 +41,10 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         datetime: ''
       });
       setDayWarning(null);
+      setIsDayFull(false);
       return;
     }
-    
+
     const ev = events.find(e => e.id === editId);
     if (ev) {
       setForm({
@@ -54,6 +56,9 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         channel: ev.channel,
         datetime: ev.datetime
       });
+      // Reset warning when editing
+      setDayWarning(null);
+      setIsDayFull(false);
     }
   }, [editId, events]);
 
@@ -63,12 +68,31 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
       if (day && !editId) {
         const currentCount = getEventsCountForDay(day);
         if (currentCount >= maxSlotsPerDay) {
-          setDayWarning(`⚠️ Dieser Tag hat bereits ${currentCount}/${maxSlotsPerDay} Einheiten. Keine weiteren Termine möglich.`);
+          setDayWarning(`Dieser Tag hat bereits ${currentCount}/${maxSlotsPerDay} Einheiten. Keine weiteren Termine möglich.`);
+          setIsDayFull(true);
         } else {
           setDayWarning(null);
+          setIsDayFull(false);
+        }
+      } else if (day && editId) {
+        // For edit mode, check if the new date is different and has capacity
+        const originalEvent = events.find(e => e.id === editId);
+        if (originalEvent && originalEvent.datetime.split('T')[0] !== day) {
+          const currentCount = getEventsCountForDay(day);
+          if (currentCount >= maxSlotsPerDay) {
+            setDayWarning(`Dieser Tag hat bereits ${currentCount}/${maxSlotsPerDay} Einheiten. Keine weiteren Termine möglich.`);
+            setIsDayFull(true);
+          } else {
+            setDayWarning(null);
+            setIsDayFull(false);
+          }
+        } else {
+          setDayWarning(null);
+          setIsDayFull(false);
         }
       } else {
         setDayWarning(null);
+        setIsDayFull(false);
       }
     }
     setForm(prev => ({ ...prev, [key]: value }));
@@ -102,6 +126,20 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
     }
 
     onSave(form);
+    // Reset form after save
+    if (editId === null) {
+      setForm({
+        account: '',
+        address: '',
+        title: '',
+        teacher: '',
+        student: '',
+        channel: 'zoom',
+        datetime: ''
+      });
+      setDayWarning(null);
+      setIsDayFull(false);
+    }
   };
 
   const systemStatus = {
@@ -116,8 +154,8 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         <h3>🏫 Account & Standort</h3>
         <div className="input-group">
           <label>Manager / Account</label>
-          <input 
-            value={form.account} 
+          <input
+            value={form.account}
             onChange={e => updateField('account', e.target.value)}
             placeholder="z.B. Sprachzentrum Berlin"
             autoComplete="off"
@@ -125,8 +163,8 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         </div>
         <div className="input-group">
           <label>Adresse / Schule</label>
-          <input 
-            value={form.address} 
+          <input
+            value={form.address}
             onChange={e => updateField('address', e.target.value)}
             placeholder="Straße, Ort, Raum"
             autoComplete="off"
@@ -138,24 +176,24 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         <h3>✏️ {editId ? 'Bearbeitungsmodus' : 'Neue Unterrichtseinheit'}</h3>
         <div className="input-group">
           <label>📖 Titel *</label>
-          <input 
-            value={form.title} 
+          <input
+            value={form.title}
             onChange={e => updateField('title', e.target.value)}
             placeholder="z.B. Englisch B2 Konversation"
           />
         </div>
         <div className="input-group">
           <label>👩‍🏫 Lehrer:in</label>
-          <input 
-            value={form.teacher} 
+          <input
+            value={form.teacher}
             onChange={e => updateField('teacher', e.target.value)}
             placeholder="Name"
           />
         </div>
         <div className="input-group">
           <label>🧑‍🎓 Schüler:in</label>
-          <input 
-            value={form.student} 
+          <input
+            value={form.student}
             onChange={e => updateField('student', e.target.value)}
             placeholder="Name / Gruppe"
           />
@@ -172,14 +210,23 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         </div>
         <div className="input-group">
           <label>📅 Datum & Uhrzeit *</label>
-          <input 
-            type="datetime-local" 
-            value={form.datetime} 
+          <input
+            type="datetime-local"
+            value={form.datetime}
             onChange={e => updateField('datetime', e.target.value)}
+            className={isDayFull ? 'datetime-full' : ''}
           />
           {dayWarning && (
-            <div style={{ color: '#f59e0b', fontSize: '12px', marginTop: '4px' }}>
-              {dayWarning}
+            <div className="capacity-warning">
+              <div className="capacity-warning-icon">⚠️</div>
+              <div className="capacity-warning-content">
+                <div className="capacity-warning-title">Kapazitätslimit erreicht</div>
+                <div className="capacity-warning-message">{dayWarning}</div>
+                <div className="capacity-warning-stats">
+                  <span>📊 Max: {maxSlotsPerDay} Einheiten/Tag</span>
+                  <span>🔒 Keine weiteren Buchungen möglich</span>
+                </div>
+              </div>
             </div>
           )}
         </div>

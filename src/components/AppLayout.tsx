@@ -1,6 +1,6 @@
 //src/components/AppLayout.tsx
 
-import { useState, useEffect } from 'react'; // Add useEffect to the import
+import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import EventList from './EventList';
@@ -13,8 +13,10 @@ export default function AppLayout() {
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  const mainAreaRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // Add the parallax scroll effect here
+  // Parallax scroll effect for cards
   useEffect(() => {
     const handleScroll = () => {
       const cards = document.querySelectorAll('.event-card-3d');
@@ -28,10 +30,11 @@ export default function AppLayout() {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []); // Empty dependency array means this runs once when component mounts
+  }, []);
 
   const showToast = (message: string, type: 'success' | 'error' = 'success') => {
     setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
   };
 
   const filteredEvents = events.filter(ev => 
@@ -61,8 +64,17 @@ export default function AppLayout() {
 
   const handleEdit = (id: number) => {
     setEditId(id);
-    // Scroll to sidebar
-    document.querySelector('.sidebar')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Smooth scroll to sidebar with better positioning
+    setTimeout(() => {
+      const sidebar = document.querySelector('.sidebar');
+      if (sidebar) {
+        sidebar.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start',
+          inline: 'nearest'
+        });
+      }
+    }, 100);
   };
 
   const handleDelete = (id: number) => {
@@ -91,14 +103,16 @@ export default function AppLayout() {
       <Header />
       
       <div className="app-layout">
-        <Sidebar 
-          editId={editId}
-          events={events}
-          onSave={handleSave}
-          onReset={handleReset}
-        />
+        <div ref={sidebarRef}>
+          <Sidebar 
+            editId={editId}
+            events={events}
+            onSave={handleSave}
+            onReset={handleReset}
+          />
+        </div>
         
-        <div className="main-area">
+        <div className="main-area" ref={mainAreaRef}>
           <div className="events-header">
             <h3>📋 Stundenplan</h3>
             <div className="filter-bar">
