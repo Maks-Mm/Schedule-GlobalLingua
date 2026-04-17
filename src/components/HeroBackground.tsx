@@ -16,7 +16,7 @@ export default function HeroBackground({ children, backgroundImage }: HeroProps)
       setImageUrl(backgroundImage);
     } else {
       // Premium education/language learning background
-      setImageUrl('/public/Gemini_Generated_Image_1pw3oe1pw3oe1pw3.png');
+      setImageUrl('/public/gemini_Generated_Image_1pw3oe1pw3oe1pw3.png');
     }
   }, [backgroundImage]);
 
