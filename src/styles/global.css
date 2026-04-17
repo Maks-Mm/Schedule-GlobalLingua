@@ -11,11 +11,27 @@
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-  background: white;
+  background: #0a0c10;
   color: var(--text);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
+
+@keyframes subtleSlide {
+  0% { 
+    background-position: 0% 50%;
+    background-size: 120% 100%;
+  }
+  50% { 
+    background-position: 100% 50%;
+    background-size: 130% 100%;
+  }
+  100% { 
+    background-position: 0% 50%;
+    background-size: 120% 100%;
+  }
+}
 /* Rest of your CSS remains exactly the same from here... */
 .bg-animate {
   position: fixed;
@@ -25,8 +41,10 @@ body {
   height: 100%;
   z-index: -2;
   background: linear-gradient(125deg, #0b0e17 0%, #11161f 40%, #0a0c14 100%);
+  background-size: 150% 100%;
+  background-position: 0% 50%;
+  animation: orchestrateSlide 35s ease infinite;
 }
-
 
 .bg-animate::after {
   content: '';
@@ -37,6 +55,35 @@ body {
   left: -50%;
   background: radial-gradient(circle at 30% 40%, rgba(59,130,246,0.08), transparent 70%);
   animation: slowDrift 22s infinite alternate;
+}
+
+/* Professional sliding animation for schedule orchestrator */
+@keyframes orchestrateSlide {
+  0% { 
+    background-position: 0% 50%;
+    background-size: 150% 100%;
+  }
+  25% { 
+    background-position: 50% 50%;
+    background-size: 140% 100%;
+  }
+  50% { 
+    background-position: 100% 50%;
+    background-size: 150% 100%;
+  }
+  75% { 
+    background-position: 50% 50%;
+    background-size: 140% 100%;
+  }
+  100% { 
+    background-position: 0% 50%;
+    background-size: 150% 100%;
+  }
+}
+
+@keyframes slowDrift {
+  0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.4; }
+  100% { transform: translate(4%, 6%) rotate(3deg); opacity: 0.9; }
 }
 
 @keyframes slowDrift {

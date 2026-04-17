@@ -1,5 +1,4 @@
 //src/components/LandingPage.tsx
-
 import HeroBackground from './HeroBackground';
 
 type LandingPageProps = {
@@ -9,13 +8,13 @@ type LandingPageProps = {
 export default function LandingPage({ onEnter }: LandingPageProps) {
   return (
     <HeroBackground>
-      <h1>GlobalLingua Academy</h1>
+      <h1>Schedule Orchestrator</h1>
       <p>
-        Master languages with our premium scheduling platform.<br />
-        Connect teachers and students seamlessly.
+        Eliminate scheduling chaos. Coordinate teachers, students, and platforms<br />
+        in one centralized system. Never miss or double-book a lesson again.
       </p>
       <button className="hero-btn" onClick={onEnter}>
-        Enter Dashboard →
+        Launch Orchestrator →
       </button>
     </HeroBackground>
   );

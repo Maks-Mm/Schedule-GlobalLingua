@@ -138,6 +138,26 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
         </div>
       </div>
 
+      {/* Add after the existing card */}
+<div className="card system-status">
+  <h3>⚙️ System Status</h3>
+  <div className="status-item">
+    <span>Orchestrator Mode</span>
+    <span className="status-active">● Active</span>
+  </div>
+  <div className="status-item">
+    <span>Local Storage</span>
+    <span className="status-active">● Synced</span>
+  </div>
+  <div className="status-item">
+    <span>Timezone</span>
+    <span>{Intl.DateTimeFormat().resolvedOptions().timeZone}</span>
+  </div>
+  <div className="status-note">
+    ⚡ Preventing scheduling chaos since 2024
+  </div>
+</div>
+
       <div className="card small">
         <div style={{ fontSize: '12px', opacity: 0.7 }}>
           ✨ Features: Sortieren via Drag & Drop (Up/Down), Suche, Echtzeit-Statistik, Benachrichtigungen, lokale Speicherung
