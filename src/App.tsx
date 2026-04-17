@@ -1,6 +1,6 @@
 //src/App.tsx
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import LandingPage from './components/LandingPage';
 import AppLayout from './components/AppLayout';
 
