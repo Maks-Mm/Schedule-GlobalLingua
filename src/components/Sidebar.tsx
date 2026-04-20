@@ -97,49 +97,48 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
     setForm(prev => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = () => {
-    if (!form.title.trim()) {
-      alert('Bitte Titel eingeben');
-      return;
-    }
-    if (!form.datetime) {
-      alert('Datum & Uhrzeit erforderlich');
-      return;
-    }
+  const handleSubmit = async () => {
+  if (!form.title.trim()) {
+    alert('Bitte Titel eingeben');
+    return;
+  }
+  if (!form.datetime) {
+    alert('Datum & Uhrzeit erforderlich');
+    return;
+  }
 
-    if (!isSlotAvailable(form.datetime)) {
-      const day = form.datetime.split('T')[0];
-      const count = getEventsCountForDay(day);
-      alert(`❌ Keine Kapazität mehr am ${day}\nBereits ${count}/${maxSlotsPerDay} Unterrichtseinheiten gebucht.\nBitte wählen Sie einen anderen Tag.`);
-      return;
-    }
+  if (!isSlotAvailable(form.datetime)) {
+    const day = form.datetime.split('T')[0];
+    const count = getEventsCountForDay(day);
+    alert(`❌ Keine Kapazität mehr am ${day}\nBereits ${count}/${maxSlotsPerDay} Unterrichtseinheiten gebucht.\nBitte wählen Sie einen anderen Tag.`);
+    return;
+  }
 
-    if (editId !== null) {
-      const originalEvent = events.find(e => e.id === editId);
-      if (originalEvent && originalEvent.datetime !== form.datetime) {
-        if (!isSlotAvailable(form.datetime)) {
-          alert('❌ Der neue Termin ist an einem bereits ausgebuchten Tag.\nBitte wählen Sie einen anderen Tag.');
-          return;
-        }
-      }
-    }
+  const res = await fetch("http://localhost:3001/api/create-event", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(form)
+  });
 
-    onSave(form);
-    // Reset form after save
-    if (editId === null) {
-      setForm({
-        account: '',
-        address: '',
-        title: '',
-        teacher: '',
-        student: '',
-        channel: 'zoom',
-        datetime: ''
-      });
-      setDayWarning(null);
-      setIsDayFull(false);
-    }
-  };
+  if (!res.ok) {
+    alert("Server error");
+    return;
+  }
+
+  // optional: keep local UI sync
+  onSave(form);
+
+  // reset
+  setForm({
+    account: '',
+    address: '',
+    title: '',
+    teacher: '',
+    student: '',
+    channel: 'zoom',
+    datetime: ''
+  });
+};
 
   const systemStatus = {
     orchestrator: true,
