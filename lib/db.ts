@@ -1,26 +1,18 @@
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI as string;
+const uri = process.env.MONGODB_URI;
 
 if (!uri) {
-  throw new Error("MONGODB_URI missing in .env file");
+  throw new Error("MONGODB_URI missing");
 }
 
-console.log("Attempting to connect to MongoDB...");
+const client = new MongoClient(uri);
+const clientPromise = client.connect();
 
-const client = new MongoClient(uri, {
-  serverSelectionTimeoutMS: 5000,
-  connectTimeoutMS: 10000,
-});
-
-const clientPromise = client.connect()
-  .then(() => {
-    console.log("✅ MongoDB connected successfully");
-    return client;
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection failed:", err.message);
-    throw err;
-  });
+export async function getDB() {
+  const client = await clientPromise;
+  // Use the default database or specify one
+  return client.db("global-lingua"); // or whatever you want to name your database
+}
 
 export default clientPromise;
