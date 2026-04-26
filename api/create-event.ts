@@ -1,4 +1,4 @@
-//aps/create-event.ts
+//api/create-event.ts
 
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { redis } from "../lib/redis";
