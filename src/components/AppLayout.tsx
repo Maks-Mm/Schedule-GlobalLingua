@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
+import EventCard from './EventCard';
 import Sidebar from './Sidebar';
 import EventList from './EventList';
 import Toast from './Toast';
@@ -15,9 +16,11 @@ export default function AppLayout() {
   const mainAreaRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => () => {});
+  const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => () => { });
   const [successToast, setSuccessToast] = useState(false);
   const [lastAddedEventId, setLastAddedEventId] = useState<number | null>(null);
+  const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('list');
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   // Parallax scroll effect for cards
   useEffect(() => {
@@ -72,11 +75,11 @@ export default function AppLayout() {
     } else {
       const newEvent = addEvent(formData);
       showToast('✅ Termin erfolgreich gespeichert', 'success');
-      
+
       // Show success message on mobile
       setSuccessToast(true);
       setTimeout(() => setSuccessToast(false), 3000);
-      
+
       // Store the ID of the new event for scrolling
       if (newEvent && newEvent.id) {
         setLastAddedEventId(newEvent.id);
@@ -91,10 +94,15 @@ export default function AppLayout() {
 
   const handleEdit = (id: number) => {
     setEditId(id);
-    showToast('Bearbeitungsmodus aktiviert', 'info');
-    // On mobile, scroll to sidebar when editing
-    if (window.innerWidth <= 768 && sidebarRef.current) {
-      sidebarRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (window.innerWidth <= 768) {
+      setMobileView('form');
+    }
+  };  
+
+  const handleOpenDetail = (id: number) => {
+    setSelectedEventId(id);
+    if (window.innerWidth <= 768) {
+      setMobileView('detail');
     }
   };
 
@@ -130,47 +138,112 @@ export default function AppLayout() {
       <Header />
 
       <div className="app-layout">
-        <div ref={sidebarRef} className="sidebar-container">
-          <Sidebar
-            editId={editId}
-            events={events}
-            onSave={handleSave}
-            onReset={handleReset}
-          />
-        </div>
+        {window.innerWidth <= 768 ? (
+          <>
+            {mobileView === 'list' && (
+              <div className="main-area" ref={mainAreaRef}>
+                <div className="events-header">
+                  <h3>📋 Stundenplan ({filteredEvents.length} Termine)</h3>
+                  <div className="filter-bar">
+                    <input
+                      type="text"
+                      placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
+                      value={searchTerm}
+                      onChange={e => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <ConfirmDialog
+                  isOpen={confirmOpen}
+                  title="Löschen bestätigen"
+                  message="Dieser Termin wird dauerhaft gelöscht."
+                  onConfirm={() => {
+                    onConfirmAction();
+                    setConfirmOpen(false);
+                  }}
+                  onCancel={() => setConfirmOpen(false)}
+                />
+                <EventList
+                  events={filteredEvents}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onMoveUp={handleMoveUp}
+                  onMoveDown={handleMoveDown}
+                  onOpenDetail={handleOpenDetail}
+                />
+              </div>
+            )}
 
-        <div className="main-area" ref={mainAreaRef}>
-          <div className="events-header">
-             <h3>📋 Stundenplan ({filteredEvents.length} Termine)</h3>
-            <div className="filter-bar">
-              <input
-                type="text"
-                placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+            {mobileView === 'form' && (
+              <div className="sidebar-container" ref={sidebarRef}>
+                <Sidebar
+                  editId={editId}
+                  events={events}
+                  onSave={handleSave}
+                  onReset={handleReset}
+                />
+              </div>
+            )}
+
+            {mobileView === 'detail' && selectedEventId && (
+              <div className="main-area" ref={mainAreaRef}>
+                <EventCard
+                  event={events.find(e => e.id === selectedEventId)!}
+                  index={0}
+                  totalEvents={1}
+                  onEdit={handleEdit}
+                  onDelete={handleDelete}
+                  onMoveUp={() => {}}
+                  onMoveDown={() => {}}
+                  onOpenDetail={handleOpenDetail}
+                />
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="sidebar-container" ref={sidebarRef}>
+              <Sidebar
+                editId={editId}
+                events={events}
+                onSave={handleSave}
+                onReset={handleReset}
               />
             </div>
-          </div>
 
-          <ConfirmDialog
-            isOpen={confirmOpen}
-            title="Löschen bestätigen"
-            message="Dieser Termin wird dauerhaft gelöscht."
-            onConfirm={() => {
-              onConfirmAction();
-              setConfirmOpen(false);
-            }}
-            onCancel={() => setConfirmOpen(false)}
-          />
-
-          <EventList
-            events={filteredEvents}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onMoveUp={handleMoveUp}
-            onMoveDown={handleMoveDown}
-          />
-        </div>
+            <div className="main-area" ref={mainAreaRef}>
+              <div className="events-header">
+                <h3>📋 Stundenplan ({filteredEvents.length} Termine)</h3>
+                <div className="filter-bar">
+                  <input
+                    type="text"
+                    placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+              <ConfirmDialog
+                isOpen={confirmOpen}
+                title="Löschen bestätigen"
+                message="Dieser Termin wird dauerhaft gelöscht."
+                onConfirm={() => {
+                  onConfirmAction();
+                  setConfirmOpen(false);
+                }}
+                onCancel={() => setConfirmOpen(false)}
+              />
+              <EventList
+                events={filteredEvents}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
+                onOpenDetail={handleOpenDetail}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {toast && (

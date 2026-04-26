@@ -11,11 +11,12 @@ type Props = {
   onDelete: (id: number) => void;
   onMoveUp: (index: number) => void;
   onMoveDown: (index: number) => void;
+  onOpenDetail: (id: number) => void;
 };
 
 function escapeHtml(str: string) {
   if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
+  return str.replace(/[&<>]/g, function (m) {
     if (m === '&') return '&amp;';
     if (m === '<') return '&lt;';
     if (m === '>') return '&gt;';
@@ -27,41 +28,42 @@ function formatDateTime(datetimeStr: string) {
   if (!datetimeStr) return 'Keine Zeit';
   try {
     const dateObj = new Date(datetimeStr);
-    return dateObj.toLocaleString('de-DE', { 
-      day: '2-digit', 
-      month: '2-digit', 
-      year: 'numeric', 
-      hour: '2-digit', 
-      minute: '2-digit' 
+    return dateObj.toLocaleString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
-  } catch(e) { 
-    return datetimeStr; 
+  } catch (e) {
+    return datetimeStr;
   }
 }
 
-export default function EventCard({ 
-  event, 
-  index, 
-  totalEvents, 
-  onEdit, 
-  onDelete, 
-  onMoveUp, 
-  onMoveDown 
+export default function EventCard({
+  event,
+  index,
+  totalEvents,
+  onEdit,
+  onDelete,
+  onMoveUp,
+  onMoveDown,
+  onOpenDetail
 }: Props) {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isHovering) return;
-    
+
     const rect = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    
+
     // Calculate rotation based on mouse position (-8 to 8 degrees)
     const rotateX = ((y - rect.height / 2) / rect.height) * 8;
     const rotateY = ((x - rect.width / 2) / rect.width) * -8;
-    
+
     setRotation({ x: rotateX, y: rotateY });
   };
 
@@ -71,14 +73,15 @@ export default function EventCard({
   };
 
   return (
-    <div 
+    <div
       className="event-card-3d"
       data-event-id={event.id}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={handleMouseLeave}
+      onClick={() => onOpenDetail(event.id)}
       style={{
-        transform: isHovering 
+        transform: isHovering
           ? `perspective(400px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`
           : 'perspective(400px) rotateX(0deg) rotateY(0deg)',
         transition: 'transform 0.3s ease',
@@ -91,7 +94,7 @@ export default function EventCard({
             {event.channel || '—'}
           </span>
         </div>
-        
+
         <div className="event-meta">
           <span className="meta-chip">
             🏫 {escapeHtml(event.account) || 'Kein Account'} {event.address ? '· ' + escapeHtml(event.address) : ''}
@@ -100,8 +103,15 @@ export default function EventCard({
           <span className="meta-chip">🧑‍🎓 {escapeHtml(event.student) || '—'}</span>
           <span className="meta-chip">⏰ {formatDateTime(event.datetime)}</span>
         </div>
-        
+
         <div className="event-actions">
+          <button
+            className="btn-secondary"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(event.id);
+            }}
+          ></button>
           <button className="btn-secondary" onClick={() => onEdit(event.id)}>
             ✏️ Bearbeiten
           </button>

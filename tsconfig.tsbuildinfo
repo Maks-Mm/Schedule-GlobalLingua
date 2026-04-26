@@ -1,1 +1,1 @@
-{"root":["./server/index.ts","./lib/db.ts","./lib/email.ts"],"version":"6.0.3"}
+{"root":["./server/index.ts","./lib/db.ts","./lib/email.ts","./lib/redis.ts"],"version":"6.0.3"}

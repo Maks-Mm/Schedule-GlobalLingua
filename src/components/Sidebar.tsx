@@ -155,7 +155,7 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
       return;
     }
 
-    const res = await fetch("http://localhost:3001/api/create-event", {
+    const res = await fetch("/api/create-event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
@@ -352,7 +352,7 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
       </div>
 
       <div className="card small">
-        <div style={{ fontSize: '12px', opacity: 0.7 }}>
+        <div style={{ fontSize: '12px', opacity: 0.7,color:'white' }}>
           ✨ Features: Automatische Kapazitätsprüfung, Konflikterkennung, Echtzeit-Validierung, 
           <strong> Smart Day Suggestions</strong>
         </div>

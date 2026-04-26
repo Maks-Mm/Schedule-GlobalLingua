@@ -9,9 +9,10 @@ type Props = {
   onDelete: (id: number) => void;
   onMoveUp: (index: number) => void;
   onMoveDown: (index: number) => void;
+  onOpenDetail: (id: number) => void;
 };
 
-export default function EventList({ events, onEdit, onDelete, onMoveUp, onMoveDown }: Props) {
+export default function EventList({ events, onEdit, onDelete, onMoveUp, onMoveDown, onOpenDetail }: Props) {
   if (events.length === 0) {
     return (
       <div className="empty-state">
@@ -24,16 +25,17 @@ export default function EventList({ events, onEdit, onDelete, onMoveUp, onMoveDo
   return (
     <div className="events-list-container">
       {events.map((ev, idx) => (
-        <EventCard
-          key={ev.id}
-          event={ev}
-          index={idx}
-          totalEvents={events.length}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onMoveUp={onMoveUp}
-          onMoveDown={onMoveDown}
-        />
+      <EventCard
+  key={ev.id}
+  event={ev}
+  index={idx}
+  totalEvents={events.length}
+  onEdit={onEdit}
+  onDelete={onDelete}
+  onMoveUp={onMoveUp}
+  onMoveDown={onMoveDown}
+  onOpenDetail={onOpenDetail}
+/>
       ))}
     </div>
   );
