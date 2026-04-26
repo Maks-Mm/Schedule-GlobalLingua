@@ -10,37 +10,32 @@ html {
 .main-area::-webkit-scrollbar {
   width: 8px;
 }
-
 .main-area::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
 }
-
 .main-area::-webkit-scrollbar-thumb {
   background: #3b82f6;
   border-radius: 10px;
 }
-
 .main-area::-webkit-scrollbar-thumb:hover {
   background: #2563eb;
 }
 
-/* Ensure sidebar scrolls independently */
+/* Custom scrollbar for sidebar */
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
-
 .sidebar::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
 }
-
 .sidebar::-webkit-scrollbar-thumb {
   background: #3b82f6;
   border-radius: 10px;
 }
 
-/* Your existing styles below */
+/* Base Reset & Globals */
 * {
   margin: 0;
   padding: 0;
@@ -48,8 +43,7 @@ html {
 }
 
 body {
- margin: 0;
-  /* Updated to Plus Jakarta Sans */
+  margin: 0;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   background: #0a0c10;
   color: var(--text);
@@ -58,22 +52,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-
-@keyframes subtleSlide {
-  0% { 
-    background-position: 0% 50%;
-    background-size: 120% 100%;
-  }
-  50% { 
-    background-position: 100% 50%;
-    background-size: 130% 100%;
-  }
-  100% { 
-    background-position: 0% 50%;
-    background-size: 120% 100%;
-  }
-}
-/* Rest of your CSS remains exactly the same from here... */
 .bg-animate {
   position: fixed;
   top: 0;
@@ -98,63 +76,22 @@ body {
   animation: slowDrift 22s infinite alternate;
 }
 
-/* Professional sliding animation for schedule orchestrator */
 @keyframes orchestrateSlide {
-  0% { 
-    background-position: 0% 50%;
-    background-size: 150% 100%;
-  }
-  25% { 
-    background-position: 50% 50%;
-    background-size: 140% 100%;
-  }
-  50% { 
-    background-position: 100% 50%;
-    background-size: 150% 100%;
-  }
-  75% { 
-    background-position: 50% 50%;
-    background-size: 140% 100%;
-  }
-  100% { 
-    background-position: 0% 50%;
-    background-size: 150% 100%;
-  }
+  0% { background-position: 0% 50%; background-size: 150% 100%; }
+  25% { background-position: 50% 50%; background-size: 140% 100%; }
+  50% { background-position: 100% 50%; background-size: 150% 100%; }
+  75% { background-position: 50% 50%; background-size: 140% 100%; }
+  100% { background-position: 0% 50%; background-size: 150% 100%; }
 }
 
 @keyframes slowDrift {
   0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.4; }
   100% { transform: translate(4%, 6%) rotate(3deg); opacity: 0.9; }
-}
-
-@keyframes slowDrift {
-  0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.4; }
-  100% { transform: translate(4%, 6%) rotate(3deg); opacity: 0.9; }
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--surface);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
 }
 
 /* Header styles */
 .glass-header {
- backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   background: rgba(15, 18, 25, 0.75);
   border-bottom: 1px solid rgba(59,130,246,0.3);
   padding: 16px 24px;
@@ -172,7 +109,7 @@ body {
 }
 
 .logo {
-  font-weight: 800; /* Extra bold for the brand */
+  font-weight: 800;
   font-size: 1.6rem;
   background: linear-gradient(135deg, #fff, #7aa9ff);
   -webkit-background-clip: text;
@@ -189,140 +126,156 @@ body {
   color: #b9c8ff;
 }
 
-/* Layout */
+/* Layout - Desktop */
 .app-layout {
-   display: grid;
+  display: grid;
   grid-template-columns: 380px 1fr;
   gap: 24px;
   max-width: 1600px;
   margin: 0 auto;
   padding: 24px;
   min-height: calc(100vh - 76px);
-  align-items: start
+  align-items: start;
 }
 
 .sidebar {
-    position: sticky;
+  position: sticky;
   top: 24px;
   align-self: start;
   max-height: calc(100vh - 48px);
   overflow-y: auto;
-}
-
-.card {
-  background: rgba(30, 34, 43, 0.75);
-  backdrop-filter: blur(4px);
-  border: 1px solid #2a2f3c;
+  width: 380px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
   border-radius: 24px;
-  padding: 18px;
-  margin-bottom: 24px;
-  transition: all 0.2s;
-  color:white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  backdrop-filter: blur(10px);
 }
 
-.card h3 {
- font-size: 0.95rem;
-  font-weight: 600; /* Semi-bold for dashboard headers */
-  margin-bottom: 14px;
+/* Cards inside sidebar */
+.sidebar .card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: all 0.3s ease;
+}
+
+.sidebar .card h3 {
+  color: #f1f5f9;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #ccddf8;
-  letter-spacing: -0.01em;
+  border-left: 3px solid #3b82f6;
+  padding-left: 12px;
 }
 
-.input-group {
-  margin-bottom: 14px;
+.sidebar .input-group {
+  margin-bottom: 16px;
 }
 
-label {
-  font-size: 0.65rem; /* Slightly smaller since Jakarta is wider */
-  text-transform: uppercase;
-  letter-spacing: 0.08em; /* More space for the all-caps labels */
-  font-weight: 700;
-  color: var(--text-muted);
+.sidebar .input-group label {
   display: block;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 500;
   margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-input, select {
+.sidebar .input-group input,
+.sidebar .input-group select {
   width: 100%;
-  padding: 12px 14px;
-  background: #0f121b;
-  border: 1px solid #2a2f3c;
-  border-radius: 16px;
-  color: white;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+  color: #f1f5f9;
   font-size: 0.9rem;
-  transition: 0.2s;
-}
-input, select, button {
-  font-family: 'Plus Jakarta Sans', sans-serif; /* Ensure inputs use the font */
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-input:focus, select:focus {
+.sidebar .input-group input:focus,
+.sidebar .input-group select:focus {
   outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  background: rgba(15, 23, 42, 1);
 }
 
-button {
-  border: none;
-  border-radius: 40px;
-  padding: 10px 14px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: 0.2s;
-  background: #2d3748;
-  color: white;
-}
-
-button.primary {
-  background: var(--accent);
-  box-shadow: 0 2px 8px rgba(59,130,246,0.3);
-}
-
-button.primary:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
-}
-
-button.danger {
-  background: rgba(239,68,68,0.85);
-}
-
-button.danger:hover {
-  background: #dc2626;
-}
-
-.secondary {
-  background: #2a2f3c;
-}
-
-.secondary:hover {
-  background: #3f4758;
-}
-
-.button-group {
+.sidebar .button-group {
   display: flex;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
+.sidebar .button-group button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.sidebar .button-group button.primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.sidebar .button-group button.secondary {
+  background: rgba(71, 85, 105, 0.3);
+  color: #cbd5e1;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.sidebar .capacity-warning {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-left: 3px solid #f59e0b;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Main Area - Desktop */
 .main-area {
-    padding: 0;
-  overflow-y: visible;
-  max-height: calc(100vh - 48px);
+  padding: 0;
   overflow-y: auto;
+  max-height: calc(100vh - 48px);
   scroll-behavior: smooth;
 }
+
 .events-header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 20px;
   flex-wrap: wrap;
-  color:white;
+  color: white;
 }
 
 .filter-bar {
@@ -330,7 +283,7 @@ button.danger:hover {
   gap: 12px;
   padding: 6px 12px;
   border-radius: 60px;
-  color:white;
+  color: white;
 }
 
 .filter-bar input {
@@ -338,90 +291,32 @@ button.danger:hover {
   padding: 8px 14px;
   margin: 0;
   background: #0f121b;
+  border: 1px solid #2a2f3c;
+  border-radius: 16px;
+  color: white;
 }
 
-/* 3D Event Card Styles */
+/* Event Cards */
 .event-card-3d {
   background: linear-gradient(105deg, #161c26 0%, #11161f 100%);
   border-radius: 24px;
   margin-bottom: 20px;
   border-left: 4px solid var(--accent);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   position: relative;
-  transform-style: preserve-3d;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --a: 8deg;
-  --r: 1, -1;
+  overflow: hidden;
 }
 
-.event-card-3d::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%),
-    rgba(59,130,246,0.18),
-    transparent 45%);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-
-
-.event-card-3d:hover::before {
-  opacity: 1;
-}
-
-
-.event-card-3d:hover .event-card-inner {
-  backdrop-filter: blur(2px);
-}
 .event-card-inner {
   padding: 24px 20px;
   position: relative;
   z-index: 1;
 }
 
-/* Gradient mask animation for premium feel */
-.event-card-3d {
-  position: relative;
-  border-radius: 24px;
-  background: rgba(20, 24, 32, 0.55);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(6px);
-
-  transform: translateZ(0);
-  transition: transform 0.25s ease, background 0.25s ease, border 0.25s ease, box-shadow 0.25s ease;
-  overflow: hidden;
-}
-.event-card-3d:hover {
-  -webkit-mask-position: 0 0;
-  mask-position: 0 0;
-}
-
-/* Alternate gradient for even cards */
-.event-card-3d:nth-child(even) {
-  --r: 1, 1;
-  -webkit-mask: linear-gradient(45deg, #000c 40%, #000, #000c 60%) 0 100%/250% 250%;
-  mask: linear-gradient(45deg, #000c 40%, #000, #000c 60%) 0 100%/250% 250%;
-}
-
-.event-card-3d:nth-child(even):hover {
-  -webkit-mask-position: 100% 0;
-  mask-position: 100% 0;
-}
-
-.channel-badge {
-  font-size: 0.7rem;
-  background: #2d3748;
-  padding: 2px 10px;
-  border-radius: 30px;
-  display: inline-block;
-}
-
 .event-title {
- font-size: 1.2rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   margin-bottom: 8px;
@@ -441,7 +336,7 @@ button.danger:hover {
 }
 
 .meta-chip {
- font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 500;
   background: #1e2a3a;
   padding: 4px 12px;
@@ -457,16 +352,22 @@ button.danger:hover {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  flex-direction: row;
 }
 
-.empty-state {
-  text-align: center;
-  padding: 60px 20px;
-  background: rgba(255,255,255,0.02);
-  border-radius: 48px;
-  color: #6c7a91;
+.event-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #2a2f3c;
+  color: white;
 }
 
+/* Toast & Empty State */
 .toast-modern {
   position: fixed;
   bottom: 28px;
@@ -478,87 +379,192 @@ button.danger:hover {
   border-radius: 60px;
   color: white;
   font-weight: 500;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   transition: 0.2s;
 }
 
-/* Enhanced button styles */
-.btn-secondary {
-  border: none;
-  border-radius: 40px;
-  padding: 8px 16px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: #2a2f3c;
-  color: white;
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 48px;
+  color: #6c7a91;
 }
 
-.btn-secondary:hover {
-  background: #3f4758;
-  transform: translateY(-2px);
+/* Highlight animation for new events */
+@keyframes highlightNew {
+  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); border-left-color: #3b82f6; }
+  50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); border-left-color: #3b82f6; }
+  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); border-left-color: var(--accent); }
 }
 
-.btn-danger {
-  border: none;
-  border-radius: 40px;
-  padding: 8px 16px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: rgba(239,68,68,0.85);
-  color: white;
+.event-card-3d.highlight-new {
+  animation: highlightNew 2s ease-out;
 }
 
-.btn-danger:hover {
-  background: #dc2626;
-  transform: translateY(-2px);
-}
-
-/* Loading animation for cards */
-@keyframes cardGlow {
-  0% {
-    box-shadow: 0 0 5px rgba(59,130,246,0.2);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(59,130,246,0.4);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(59,130,246,0.2);
-  }
-}
-
-.event-card-3d:focus {
-  animation: cardGlow 1s ease-in-out;
-  outline: none;
-}
-
-@media (max-width: 760px) {
+/* ===== MOBILE STYLES (≤768px) ===== */
+@media (max-width: 768px) {
+  /* Layout Override */
   .app-layout {
-    grid-template-columns: 1fr;
-    height: auto;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    padding: 16px !important;
+    min-height: auto !important;
   }
+
+  .sidebar-container {
+    width: 100%;
+  }
+
   .sidebar {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
+    position: static !important;
+    width: 100% !important;
+    max-height: none !important;
+    margin-bottom: 0;
   }
+
+  /* CRITICAL: Make main-area visible & scrollable */
+  .main-area {
+    display: block !important;
+    max-height: none !important;
+    height: auto !important;
+    min-height: 50vh !important;
+    overflow-y: visible !important;
+    padding: 0 !important;
+    margin-top: 8px;
+  }
+
+  /* Events List Container */
+  .events-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  /* Event Cards Mobile Fix */
+  .event-card-3d {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    -webkit-mask: none !important;
+    mask: none !important;
+  }
+
+  .event-card-inner { padding: 16px; }
+  .event-title { font-size: 1rem; }
+  .event-meta { gap: 8px; flex-wrap: wrap; }
+  .event-actions { flex-direction: column; gap: 8px; }
+  .event-actions button { width: 100%; text-align: center; }
+
+  /* Empty State Mobile */
+  .empty-state {
+    display: block !important;
+    padding: 40px 16px;
+    margin: 20px 0;
+  }
+
+  /* Toast Mobile */
+  .toast-modern {
+    position: fixed;
+    right: 16px;
+    left: 16px;
+    bottom: 20px;
+    text-align: center;
+    border-radius: 30px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    z-index: 1001;
+    cursor: pointer;
+  }
+
+  /* Header & Filters Mobile */
   .glass-header {
     flex-direction: column;
     align-items: flex-start;
+    padding: 12px 16px;
+  }
+
+  .filter-bar { width: 100%; }
+  .filter-bar input { width: 100%; }
+
+  .events-header {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    margin-bottom: 16px;
   }
 }
 
-/* Hero Background Animation */
+
+
+/* ===== FIX FOR MOBILE - MAIN AREA VISIBILITY ===== */
+@media (max-width: 768px) {
+  /* Override the problematic main-area constraints */
+  .main-area {
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding-bottom: 20px !important;
+  }
+  
+  /* Ensure event cards are visible */
+  .event-card-3d {
+    display: block !important;
+    visibility: visible !important;
+  }
+  
+  /* Remove mask effects that hide content on mobile */
+  .event-card-3d {
+    -webkit-mask: none !important;
+    mask: none !important;
+  }
+  
+  /* Fix sidebar on mobile */
+  .sidebar {
+    position: static !important;
+    width: 100% !important;
+    max-height: none !important;
+    margin-bottom: 20px;
+  }
+  
+  /* Better spacing for mobile */
+  .event-card-inner {
+    padding: 16px;
+  }
+  
+  .event-title {
+    font-size: 1rem;
+  }
+  
+  .event-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .event-actions button {
+    width: 100%;
+  }
+  
+  /* Toast positioning fix for mobile */
+  .toast-modern {
+    right: 16px;
+    left: 16px;
+    bottom: 20px;
+    text-align: center;
+  }
+}
+
+
+/* Add to your app.css if these are missing */
+
 .hero-background {
-  background-size: 150%;
+  background-size: cover;
+  background-position: center;
   background-repeat: no-repeat;
-  background-position: left;
-  animation: slide 40s ease infinite;
-  transform: translate3d(0, 0, 0);
   min-height: 100vh;
+  width: 100%;
   position: relative;
   display: flex;
   align-items: center;
@@ -571,7 +577,7 @@ button.danger:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(4, 0, 18, 0.50);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
@@ -582,99 +588,168 @@ button.danger:hover {
   max-width: 800px;
   padding: 2rem;
   margin: 0 auto;
+  color: white;
 }
 
 .hero-content h1 {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  letter-spacing: -0.04em;
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 800;
-  color: white;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #fff, #7aa9ff);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: fadeInUp 1s ease;
 }
 
 .hero-content p {
   font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 2rem;
-  animation: fadeInUp 1s ease 0.2s both;
+  line-height: 1.6;
 }
 
 .hero-btn {
-  background: var(--accent);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   color: white;
-  text-decoration: none;
-  padding: 12px 40px;
-  margin: 20px 0;
-  display: inline-block;
-  border-radius: 40px;
+  padding: 14px 40px;
   font-size: 1.1rem;
   font-weight: 600;
-  transition: all 0.3s ease;
   border: none;
+  border-radius: 40px;
   cursor: pointer;
-  animation: fadeInUp 1s ease 0.4s both;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
 .hero-btn:hover {
-  background: #2563eb;
   transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
-@keyframes slide {
-  0% { background-position: left; }
-  50% { background-position: right; }
-  100% { background-position: left; }
+
+/* ===== IMPROVED BUTTON STYLES FOR EVENT CARDS ===== */
+
+/* Base button styles for event action buttons */
+.event-actions button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #2a2f3c;
+  color: white;
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Hover effect for all event action buttons */
+.event-actions button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
-/* Responsive adjustments */
+/* Active/Pressed effect */
+.event-actions button:active {
+  transform: translateY(0px);
+  filter: brightness(0.95);
+}
+
+/* Specific styles for Edit button */
+.event-actions .btn-secondary {
+  background: #2a2f3c;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.event-actions .btn-secondary:hover {
+  background: #3f4758;
+  border-color: rgba(59, 130, 246, 0.6);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific styles for Delete button */
+.event-actions .btn-danger {
+  background: rgba(239, 68, 68, 0.85);
+}
+
+.event-actions .btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+/* Ripple effect for buttons */
+.event-actions button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.3s, height 0.3s;
+}
+
+.event-actions button:active::after {
+  width: 100%;
+  height: 100%;
+}
+
+/* Card hover effect - subtle border glow */
+.event-card-3d {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.event-card-3d:hover {
+  border-left-color: #3b82f6;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Card inner hover effect */
+.event-card-3d:hover .event-card-inner {
+  backdrop-filter: blur(2px);
+}
+
+/* Move up/down buttons specific styles */
+.event-actions .btn-secondary:last-child,
+.event-actions .btn-secondary:nth-last-child(2) {
+  background: #1e293b;
+}
+
+.event-actions .btn-secondary:last-child:hover,
+.event-actions .btn-secondary:nth-last-child(2):hover {
+  background: #334155;
+}
+
+/* Make the whole card indicate it's interactive */
+.event-card-3d {
+  cursor: pointer;
+}
+
+/* But prevent the cursor from changing over buttons inside */
+.event-card-3d button {
+  cursor: pointer;
+}
+
+/* Mobile touch feedback */
 @media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2.5rem;
+  .event-actions button {
+    padding: 12px 16px;  /* Larger touch target */
+    font-size: 0.9rem;
   }
   
-  .hero-content p {
-    font-size: 1rem;
+  /* Remove hover effects on mobile, use active instead */
+  .event-actions button:active {
+    transform: scale(0.98);
+    filter: brightness(0.9);
   }
   
-  .hero-background {
-    background-size: 200%;
-    animation: slide 30s ease infinite;
+  .event-card-3d:active {
+    transform: scale(0.99);
   }
-} 
-
-.fade-out {
-  animation: fadeOut 0.5s ease forwards;
 }
-
-.fade-in {
-  animation: fadeIn 0.5s ease forwards;
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-

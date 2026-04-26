@@ -1,5 +1,4 @@
-// hooks/useEvents.ts
-
+// src/hooks/useEvents.ts
 
 import { useState, useEffect } from 'react';
 import type { LinguaEvent, EventFormData } from '../types/LinguaEvent';
@@ -55,19 +54,20 @@ export function useEvents() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
   }, [events]);
 
-  const addEvent = (formData: EventFormData) => {
+  const addEvent = (eventData: EventFormData): LinguaEvent => {
     const newEvent: LinguaEvent = {
-      ...formData,
-      id: generateId(),
-      createdAt: new Date().toISOString()
+      id: Date.now(),
+      ...eventData,
+      createdAt: new Date().toISOString()  // ← Add createdAt property
     };
     setEvents(prev => [...prev, newEvent]);
+    return newEvent;
   };
 
   const updateEvent = (id: number, formData: EventFormData) => {
     setEvents(prev => prev.map(event => 
       event.id === id 
-        ? { ...formData, id, createdAt: event.createdAt }
+        ? { ...formData, id, createdAt: event.createdAt }  // ← Keep original createdAt
         : event
     ));
   };

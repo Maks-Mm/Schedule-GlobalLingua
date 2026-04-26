@@ -1,4 +1,4 @@
-//rc/components/EventList.tsx
+// src/components/EventList.tsx
 
 import EventCard from './EventCard';
 import type { LinguaEvent } from '../types/LinguaEvent';
@@ -22,7 +22,7 @@ export default function EventList({ events, onEdit, onDelete, onMoveUp, onMoveDo
   }
 
   return (
-    <div className="main-area">
+    <div className="events-list-container">
       {events.map((ev, idx) => (
         <EventCard
           key={ev.id}

@@ -73,6 +73,7 @@ export default function EventCard({
   return (
     <div 
       className="event-card-3d"
+      data-event-id={event.id}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={handleMouseLeave}

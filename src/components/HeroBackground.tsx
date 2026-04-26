@@ -1,4 +1,4 @@
-//src/compomponents/HeroBackground.tsx
+// src/components/HeroBackground.tsx
 
 import { useState, useEffect } from 'react';
 
@@ -9,21 +9,25 @@ type HeroProps = {
 
 export default function HeroBackground({ children, backgroundImage }: HeroProps) {
   const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
     // Use provided image or a default premium image
     if (backgroundImage) {
       setImageUrl(backgroundImage);
     } else {
-      // Premium education/language learning background
-      setImageUrl('/GeminiMeanImage.jpg');
+      // Use a reliable online background image instead of local file that may not exist
+      setImageUrl('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1973&auto=format&fit=crop');
     }
   }, [backgroundImage]);
 
   return (
     <div 
       className="hero-background"
-      style={{ backgroundImage: `url('${imageUrl}')` }}
+      style={{ 
+        backgroundImage: !imageError && imageUrl ? `url('${imageUrl}')` : 'none',
+        backgroundColor: '#0a0c10'
+      }}
     >
       <div className="hero-overlay">
         <div className="hero-content">
