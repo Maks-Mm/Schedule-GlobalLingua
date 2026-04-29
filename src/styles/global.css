@@ -646,9 +646,16 @@ body {
   position: fixed;
   inset: 0;
   z-index: -3;
-  background-size: cover;
-  background-position: center;
+  background-size: 150%;
   background-repeat: no-repeat;
+  background-position: left;
+  animation: heroSlide 40s ease-in-out infinite;
+}
+
+@keyframes heroSlide {
+  0%   { background-position: left; }
+  50%  { background-position: right; }
+  100% { background-position: left; }
 }
 
 .hero-section {
@@ -695,23 +702,27 @@ body {
   line-height: 1.6;
 }
 
-.hero-btn {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+
+.btn, .hero-btn {
+  background: #4C384B;
   color: white;
+  text-decoration: none;
   padding: 14px 40px;
+  margin: 20px 0;
+  display: inline-block;
+  border-radius: 3px;
   font-size: 1.1rem;
   font-weight: 600;
   border: none;
-  border-radius: 40px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.hero-btn:hover {
+.btn:hover, .hero-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  background: #3b2a3a;
 }
 
 

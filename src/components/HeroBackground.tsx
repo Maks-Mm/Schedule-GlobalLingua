@@ -17,7 +17,7 @@ export default function HeroBackground({ children, backgroundImage }: HeroProps)
       setImageUrl(backgroundImage);
     } else {
       // Use a reliable online background image instead of local file that may not exist
-      setImageUrl('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=1973&auto=format&fit=crop');
+      setImageUrl('/GeminiMeanImage.jpg');
     }
   }, [backgroundImage]);
 
