@@ -2,7 +2,7 @@
 
 ## Overview
 
-Schedule Orchestrator ist ein spezialisiertes Planungssystem zur Vermeidung von organisatorischem Chaos in Online-Unterrichtsszenarien. Der Fokus liegt nicht auf Kommunikation selbst, sondern auf der strukturierten Koordination von Zeit, Teilnehmern und Plattformen.
+Schedule Synchronization  ist ein spezialisiertes Planungssystem zur Vermeidung von organisatorischem Chaos in Online-Unterrichtsszenarien. Der Fokus liegt nicht auf Kommunikation selbst, sondern auf der strukturierten Koordination von Zeit, Teilnehmern und Plattformen.
 
 Das System adressiert typische Probleme:
 
@@ -14,7 +14,7 @@ Das System adressiert typische Probleme:
 
 ## Core Concept
 
-Das Produkt fungiert als Orchestrator zwischen:
+Das Produkt fungiert als Synchronization  zwischen:
 
 * Terminlogik (Kalender + Verfügbarkeit)
 * Teilnehmerrollen (Manager, Lehrer, Schüler)

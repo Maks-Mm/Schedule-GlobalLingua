@@ -15,7 +15,7 @@ export default function EnhancedLanding({ onEnter }: { onEnter: () => void }) {
         </span>
         <h1>GlobalLingua</h1>
         <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>
-          Schedule Orchestrator Pro
+          Schedule Synchronization  Pro
         </p>
         <p>
           Effortlessly manage your language classes,<br />
