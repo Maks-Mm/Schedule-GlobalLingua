@@ -132,7 +132,7 @@ export const translations: Record<Language, Translations> = {
     addressPlaceholder: 'Street, City, Room',
     editMode: '✏️ Edit Mode',
     newLesson: '✏️ New Lesson',
-    suggestNextDay: '🔍 Suggest next available day',
+    suggestNextDay: 'Suggest next available day',
     titleRequired: '📖 Title *',
     titlePlaceholder: 'e.g., English B2 Conversation',
     teacher: '👩‍🏫 Teacher',
@@ -161,7 +161,7 @@ export const translations: Record<Language, Translations> = {
     noFreeDays30: 'No free days found in the next 30 days.',
 
     scheduleWithCount: '📋 Schedule ({{count}} events)',
-    searchPlaceholder: '🔍 Title, teacher, student ...',
+    searchPlaceholder: 'Title, teacher, student ...',
     noEventsFound: '📭 No events found.',
     createNewLesson: 'Create a new lesson',
 
@@ -233,7 +233,7 @@ export const translations: Record<Language, Translations> = {
     addressPlaceholder: 'Straße, Ort, Raum',
     editMode: '✏️ Bearbeitungsmodus',
     newLesson: '✏️ Neue Unterrichtseinheit',
-    suggestNextDay: '🔍 Nächsten freien Tag vorschlagen',
+    suggestNextDay: 'Nächsten freien Tag vorschlagen',
     titleRequired: '📖 Titel *',
     titlePlaceholder: 'z.B. Englisch B2 Konversation',
     teacher: '👩‍🏫 Lehrer:in',
@@ -262,7 +262,7 @@ export const translations: Record<Language, Translations> = {
     noFreeDays30: 'Keine freien Tage in den nächsten 30 Tagen gefunden.',
 
     scheduleWithCount: '📋 Stundenplan ({{count}} Termine)',
-    searchPlaceholder: '🔍 Titel, Lehrer:in, Schüler:in ...',
+    searchPlaceholder: 'Titel, Lehrer:in, Schüler:in ...',
     noEventsFound: '📭 Keine Termine gefunden.',
     createNewLesson: 'Neue Unterrichtseinheit erstellen',
 

@@ -1,4 +1,6 @@
-//src/components/AppLayout.tsx
+// src/components/AppLayout.tsx
+
+// src/components/AppLayout.tsx (updated version)
 
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
@@ -7,9 +9,13 @@ import Sidebar from './Sidebar';
 import EventList from './EventList';
 import Toast from './Toast';
 import ConfirmDialog from './ConfirmDialog';
+import EnhancedSearchBar from './EnhancedSearchBar';
 import { useEvents } from '../hooks/useEvents';
 import type { EventFormData } from '../types/LinguaEvent';
 import { useLanguage } from '../contexts/LanguageContext';
+
+// Import the search styles
+import '../styles/enhanced-search.css';
 
 export default function AppLayout() {
   const { t } = useLanguage();
@@ -41,11 +47,23 @@ export default function AppLayout() {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => () => { });
 
-  const [successToast, setSuccessToast] = useState(false);
   const [lastAddedEventId, setLastAddedEventId] = useState<number | null>(null);
 
   const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('form');
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+
+  // Prepare search results from events
+  const searchResults = events.map(event => ({
+    id: event.id,
+    title: event.title,
+    teacher: event.teacher,
+    student: event.student,
+    account: event.account,
+    address: event.address
+  })).map(event => ({
+    id: event.id,
+    title: `${event.title}${event.teacher ? ` - ${event.teacher}` : ''}${event.student ? ` (${event.student})` : ''}`
+  }));
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,6 +106,21 @@ export default function AppLayout() {
     (ev.account && ev.account.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (ev.address && ev.address.toLowerCase().includes(searchTerm.toLowerCase()))
   );
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+
+  const handleSearchResultClick = (result: any) => {
+    // Optional: auto-select or highlight the event when clicked from search
+    const eventId = result.id;
+    const element = document.querySelector(`[data-event-id="${eventId}"]`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      element.classList.add('search-highlight');
+      setTimeout(() => element.classList.remove('search-highlight'), 2000);
+    }
+  };
 
   const handleSave = (formData: EventFormData) => {
     if (editId !== null) {
@@ -143,6 +176,24 @@ export default function AppLayout() {
     showToast(t.orderChanged, 'info');
   };
 
+  const grayBackButtonStyle = {
+    background: '#32363d',
+    padding: '0.7rem 1.4rem',
+    borderRadius: '60px',
+    color: 'white',
+    fontSize: '0.95rem',
+    fontWeight: 500,
+    fontFamily: 'inherit',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    transition: 'all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1)',
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+  };
+
   if (isMobile) {
     return (
       <>
@@ -151,7 +202,24 @@ export default function AppLayout() {
 
         <div className="mobile-nav">
           {mobileView !== 'list' && (
-            <button onClick={handleMobileBack} className="back-btn">← Back</button>
+            <button 
+              onClick={handleMobileBack} 
+              className="back-btn"
+              style={grayBackButtonStyle}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#4a4f59';
+                e.currentTarget.style.transform = 'scale(0.97)';
+                e.currentTarget.style.gap = '0.3rem';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#32363d';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.gap = '0.5rem';
+              }}
+            >
+              <span style={{ fontSize: '1.1em', transition: 'inherit' }}>←</span> 
+              <span>Back</span>
+            </button>
           )}
           {mobileView === 'list' && (
             <button onClick={() => { setEditId(null); setMobileView('form'); }} className="add-btn">+ New</button>
@@ -166,11 +234,12 @@ export default function AppLayout() {
           <div className="mobile-list-screen">
             <div className="events-header">
               <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredEvents.length))}</h3>
-              <input
-                type="text"
-                placeholder={t.searchPlaceholder}
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
+              <EnhancedSearchBar
+                onSearch={handleSearch}
+                searchTerm={searchTerm}
+                placeholder={t.searchPlaceholder || "Search events..."}
+                results={searchResults}
+                onResultClick={handleSearchResultClick}
               />
             </div>
 
@@ -224,11 +293,12 @@ export default function AppLayout() {
         <div className="main-area" ref={mainAreaRef}>
           <div className="events-header">
             <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredEvents.length))}</h3>
-            <input
-              type="text"
-              placeholder={t.searchPlaceholder}
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+            <EnhancedSearchBar
+              onSearch={handleSearch}
+              searchTerm={searchTerm}
+              placeholder={t.searchPlaceholder || "Search events..."}
+              results={searchResults}
+              onResultClick={handleSearchResultClick}
             />
           </div>
 
