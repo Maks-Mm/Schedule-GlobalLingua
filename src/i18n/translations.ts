@@ -118,12 +118,12 @@ export const translations: Record<Language, Translations> = {
   en: {
     appTitle: 'GlobalLingua',
     appBadge: 'ACADEMY',
-    orchestratorPro: '⚡ Orchestrator Pro',
+    orchestratorPro: '⚡ Synchronization  Pro',
 
     welcomeTitle: 'Schedule GlobalLingua',
     welcomeSubtitle: 'Smart scheduling for language schools',
     enterButton: 'Dashboard',
-    heroBadge: '⚡ Orchestrator Pro',
+    heroBadge: '⚡ Synchronization  Pro',
 
     accountLocation: '🏫 Account & Location',
     account: 'Manager / Account',
@@ -185,7 +185,7 @@ export const translations: Record<Language, Translations> = {
     ok: 'OK',
 
     systemStatus: '⚙️ System Status',
-    orchestratorMode: 'Orchestrator Mode',
+    orchestratorMode: 'Synchronization  Mode',
     localStorage: 'Local Storage',
     active: '● Active',
     inactive: '○ Inactive',
@@ -219,12 +219,12 @@ export const translations: Record<Language, Translations> = {
   de: {
     appTitle: 'GlobalLingua',
     appBadge: 'AKADEMIE',
-    orchestratorPro: '⚡ Orchestrator Pro',
+    orchestratorPro: '⚡ Synchronization  Pro',
 
     welcomeTitle: 'Schedule GlobalLingua',
     welcomeSubtitle: 'Intelligente Planung für Sprachschulen',
     enterButton: ' Dashboard →',
-    heroBadge: '⚡ Orchestrator Pro',
+    heroBadge: '⚡ Synchronization  Pro',
 
     accountLocation: '🏫 Account & Standort',
     account: 'Manager / Account',
@@ -286,7 +286,7 @@ export const translations: Record<Language, Translations> = {
     ok: 'OK',
 
     systemStatus: '⚙️ System Status',
-    orchestratorMode: 'Orchestrator Mode',
+    orchestratorMode: 'Synchronization  Mode',
     localStorage: 'Lokaler Speicher',
     active: '● Aktiv',
     inactive: '○ Inaktiv',
