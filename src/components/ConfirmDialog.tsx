@@ -1,7 +1,6 @@
-//src/components/ConfirmDialog.tsx
-
 import { useEffect, useState } from 'react';
-import '../styles/confirm.css';  // Add this import
+import { useLanguage } from '../contexts/LanguageContext';
+import '../styles/confirm.css';
 
 type ConfirmDialogProps = {
   isOpen: boolean;
@@ -12,22 +11,19 @@ type ConfirmDialogProps = {
   type?: 'danger' | 'warning' | 'info';
 };
 
-export default function ConfirmDialog({ 
-  isOpen, 
-  title, 
-  message, 
-  onConfirm, 
+export default function ConfirmDialog({
+  isOpen,
+  title,
+  message,
+  onConfirm,
   onCancel,
-  type = 'danger' 
+  type = 'danger'
 }: ConfirmDialogProps) {
+  const { t } = useLanguage();
   const [isLeaving, setIsLeaving] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.body.style.overflow = isOpen ? 'hidden' : 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
@@ -80,13 +76,35 @@ export default function ConfirmDialog({
   const getButtonText = () => {
     switch (type) {
       case 'danger':
-        return 'Löschen';
+        return t.deleteConfirm;
       case 'warning':
-        return 'Bestätigen';
+        return t.proceed;
       case 'info':
-        return 'OK';
+        return t.ok;
       default:
-        return 'Löschen';
+        return t.deleteConfirm;
+    }
+  };
+
+  const getTitle = () => {
+    switch (type) {
+      case 'danger':
+        return t.confirmDeleteTitle;
+      case 'warning':
+        return t.confirmWarningTitle;
+      case 'info':
+        return t.confirmInfoTitle;
+      default:
+        return t.confirmDeleteTitle;
+    }
+  };
+
+  const getMessage = () => {
+    switch (type) {
+      case 'danger':
+        return t.confirmDeleteMessage;
+      default:
+        return message;
     }
   };
 
@@ -94,12 +112,16 @@ export default function ConfirmDialog({
     <div className={`confirm-overlay ${isLeaving ? 'confirm-leaving' : ''}`}>
       <div className="confirm-modal">
         <div className="confirm-icon">{getIcon()}</div>
-        <h3 className="confirm-title">{title}</h3>
-        <p className="confirm-message">{message}</p>
+
+        <h3 className="confirm-title">{getTitle()}</h3>
+
+        <p className="confirm-message">{getMessage()}</p>
+
         <div className="confirm-buttons">
           <button className="confirm-btn-cancel" onClick={handleClose}>
-            Abbrechen
+            {t.cancel}
           </button>
+
           <button className={getButtonClass()} onClick={handleConfirm}>
             {getButtonText()}
           </button>

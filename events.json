@@ -292,5 +292,33 @@
     "createdAt": "2026-04-26T20:38:00.733Z",
     "emailSent": true,
     "emailSentAt": "2026-04-26T20:38:03.216Z"
+  },
+  {
+    "id": 1777425806007,
+    "title": "Location",
+    "teacher": "Location",
+    "student": "Location",
+    "datetime": "2222-02-22T21:22:00.000Z",
+    "channel": "zoom",
+    "account": "Location",
+    "address": "Location",
+    "status": "scheduled",
+    "createdAt": "2026-04-29T01:23:26.007Z",
+    "emailSent": true,
+    "emailSentAt": "2026-04-29T01:23:28.880Z"
+  },
+  {
+    "id": 1777464885221,
+    "title": "Schedule",
+    "teacher": "Schedule",
+    "student": "Schedule",
+    "datetime": "2222-02-22T21:22:00.000Z",
+    "channel": "viber",
+    "account": "Schedule",
+    "address": "Schedule",
+    "status": "scheduled",
+    "createdAt": "2026-04-29T12:14:45.222Z",
+    "emailSent": true,
+    "emailSentAt": "2026-04-29T12:14:47.337Z"
   }
 ]

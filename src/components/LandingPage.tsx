@@ -1,29 +1,26 @@
 // src/components/LandingPage.tsx
 
 import HeroBackground from './HeroBackground';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type LandingPageProps = {
-  onEnter?: () => void;
+  onEnter: () => void;
 };
 
 export default function LandingPage({ onEnter }: LandingPageProps) {
-  const handleClick = () => {
-    console.log('Launch button clicked'); // Debug log
-    if (onEnter) {
-      onEnter();
-    }
-  };
+  const { t } = useLanguage();
 
   return (
-    <HeroBackground>
-      <h1>Schedule Orchestrator</h1>
-      <p>
-        Eliminate scheduling chaos. Coordinate teachers, students, and platforms<br />
-        in one centralized system. Never miss or double-book a lesson again.
-      </p>
-      <button className="hero-btn" onClick={handleClick}>
-        Launch Orchestrator →
-      </button>
-    </HeroBackground>
+    <div className="landing-container">
+      <HeroBackground />
+      <div className="hero-content">
+        <div className="hero-badge">{t.heroBadge}</div>
+        <h1 className="hero-title">{t.welcomeTitle}</h1>
+        <p className="hero-subtitle">{t.welcomeSubtitle}</p>
+        <button onClick={onEnter} className="enter-button">
+          {t.enterButton}
+        </button>
+      </div>
+    </div>
   );
 }

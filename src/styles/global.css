@@ -10,14 +10,17 @@ html {
 .main-area::-webkit-scrollbar {
   width: 8px;
 }
+
 .main-area::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
 }
+
 .main-area::-webkit-scrollbar-thumb {
   background: #3b82f6;
   border-radius: 10px;
 }
+
 .main-area::-webkit-scrollbar-thumb:hover {
   background: #2563eb;
 }
@@ -26,10 +29,12 @@ html {
 .sidebar::-webkit-scrollbar {
   width: 6px;
 }
+
 .sidebar::-webkit-scrollbar-track {
   background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
 }
+
 .sidebar::-webkit-scrollbar-thumb {
   background: #3b82f6;
   border-radius: 10px;
@@ -72,28 +77,54 @@ body {
   height: 200%;
   top: -50%;
   left: -50%;
-  background: radial-gradient(circle at 30% 40%, rgba(59,130,246,0.08), transparent 70%);
+  background: radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.08), transparent 70%);
   animation: slowDrift 22s infinite alternate;
 }
 
 @keyframes orchestrateSlide {
-  0% { background-position: 0% 50%; background-size: 150% 100%; }
-  25% { background-position: 50% 50%; background-size: 140% 100%; }
-  50% { background-position: 100% 50%; background-size: 150% 100%; }
-  75% { background-position: 50% 50%; background-size: 140% 100%; }
-  100% { background-position: 0% 50%; background-size: 150% 100%; }
+  0% {
+    background-position: 0% 50%;
+    background-size: 150% 100%;
+  }
+
+  25% {
+    background-position: 50% 50%;
+    background-size: 140% 100%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+    background-size: 150% 100%;
+  }
+
+  75% {
+    background-position: 50% 50%;
+    background-size: 140% 100%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+    background-size: 150% 100%;
+  }
 }
 
 @keyframes slowDrift {
-  0% { transform: translate(0%, 0%) rotate(0deg); opacity: 0.4; }
-  100% { transform: translate(4%, 6%) rotate(3deg); opacity: 0.9; }
+  0% {
+    transform: translate(0%, 0%) rotate(0deg);
+    opacity: 0.4;
+  }
+
+  100% {
+    transform: translate(4%, 6%) rotate(3deg);
+    opacity: 0.9;
+  }
 }
 
 /* Header styles */
 .glass-header {
   backdrop-filter: blur(12px);
   background: rgba(15, 18, 25, 0.75);
-  border-bottom: 1px solid rgba(59,130,246,0.3);
+  border-bottom: 1px solid rgba(59, 130, 246, 0.3);
   padding: 16px 24px;
   display: flex;
   align-items: baseline;
@@ -257,8 +288,15 @@ body {
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Main Area - Desktop */
@@ -394,9 +432,20 @@ body {
 
 /* Highlight animation for new events */
 @keyframes highlightNew {
-  0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); border-left-color: #3b82f6; }
-  50% { box-shadow: 0 0 0 8px rgba(59, 130, 246, 0); border-left-color: #3b82f6; }
-  100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); border-left-color: var(--accent); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+    border-left-color: #3b82f6;
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    border-left-color: #3b82f6;
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    border-left-color: var(--accent);
+  }
 }
 
 .event-card-3d.highlight-new {
@@ -405,6 +454,7 @@ body {
 
 /* ===== MOBILE STYLES (≤768px) ===== */
 @media (max-width: 768px) {
+
   /* Layout Override */
   .app-layout {
     display: flex !important;
@@ -453,11 +503,28 @@ body {
     mask: none !important;
   }
 
-  .event-card-inner { padding: 16px; }
-  .event-title { font-size: 1rem; }
-  .event-meta { gap: 8px; flex-wrap: wrap; }
-  .event-actions { flex-direction: column; gap: 8px; }
-  .event-actions button { width: 100%; text-align: center; }
+  .event-card-inner {
+    padding: 16px;
+  }
+
+  .event-title {
+    font-size: 1rem;
+  }
+
+  .event-meta {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .event-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .event-actions button {
+    width: 100%;
+    text-align: center;
+  }
 
   /* Empty State Mobile */
   .empty-state {
@@ -487,8 +554,13 @@ body {
     padding: 12px 16px;
   }
 
-  .filter-bar { width: 100%; }
-  .filter-bar input { width: 100%; }
+  .filter-bar {
+    width: 100%;
+  }
+
+  .filter-bar input {
+    width: 100%;
+  }
 
   .events-header {
     flex-direction: column;
@@ -502,25 +574,26 @@ body {
 
 /* ===== FIX FOR MOBILE - MAIN AREA VISIBILITY ===== */
 @media (max-width: 768px) {
+
   /* Override the problematic main-area constraints */
   .main-area {
     max-height: none !important;
     overflow-y: visible !important;
     padding-bottom: 20px !important;
   }
-  
+
   /* Ensure event cards are visible */
   .event-card-3d {
     display: block !important;
     visibility: visible !important;
   }
-  
+
   /* Remove mask effects that hide content on mobile */
   .event-card-3d {
     -webkit-mask: none !important;
     mask: none !important;
   }
-  
+
   /* Fix sidebar on mobile */
   .sidebar {
     position: static !important;
@@ -528,25 +601,25 @@ body {
     max-height: none !important;
     margin-bottom: 20px;
   }
-  
+
   /* Better spacing for mobile */
   .event-card-inner {
     padding: 16px;
   }
-  
+
   .event-title {
     font-size: 1rem;
   }
-  
+
   .event-actions {
     flex-direction: column;
     gap: 8px;
   }
-  
+
   .event-actions button {
     width: 100%;
   }
-  
+
   /* Toast positioning fix for mobile */
   .toast-modern {
     right: 16px;
@@ -560,12 +633,16 @@ body {
 /* Add to your app.css if these are missing */
 
 .hero-background {
+  position: fixed;
+  inset: 0;
+  z-index: -3;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.hero-section {
   min-height: 100vh;
-  width: 100%;
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -739,17 +816,89 @@ body {
 /* Mobile touch feedback */
 @media (max-width: 768px) {
   .event-actions button {
-    padding: 12px 16px;  /* Larger touch target */
+    padding: 12px 16px;
+    /* Larger touch target */
     font-size: 0.9rem;
   }
-  
+
   /* Remove hover effects on mobile, use active instead */
   .event-actions button:active {
     transform: scale(0.98);
     filter: brightness(0.9);
   }
-  
+
   .event-card-3d:active {
     transform: scale(0.99);
   }
+}
+
+/* Language Toggle Styles */
+.language-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  padding: 6px 12px;
+  margin-left: 15px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.language-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.02);
+}
+
+.language-toggle .flag {
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  padding: 2px 4px;
+  border-radius: 20px;
+}
+
+.language-toggle .flag.active {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.toggle-separator {
+  opacity: 0.5;
+  margin: 0 2px;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+  .language-toggle {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    margin-left: 8px;
+  }
+
+  .language-toggle .flag {
+    padding: 1px 3px;
+  }
+}
+
+.enter-button {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  padding: 14px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.enter-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
 }

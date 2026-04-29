@@ -13,7 +13,7 @@ export default function AppWithHero() {
         <h1>Welcome to GlobalLingua</h1>
         <p>Your premier scheduling platform for language education</p>
         <button className="hero-btn" onClick={() => setShowHero(false)}>
-          Launch Dashboard →
+           Dashboard →
         </button>
       </HeroBackground>
     );

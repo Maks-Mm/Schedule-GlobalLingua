@@ -4,25 +4,39 @@ import EventCard from './EventCard';
 import Sidebar from './Sidebar';
 import EventList from './EventList';
 import Toast from './Toast';
+import ConfirmDialog from './ConfirmDialog';
 import { useEvents } from '../hooks/useEvents';
 import type { EventFormData } from '../types/LinguaEvent';
-import ConfirmDialog from './ConfirmDialog';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export default function AppLayout() {
-  const { events, addEvent, updateEvent, deleteEvent, moveEventUp, moveEventDown } = useEvents();
+  const { t } = useLanguage();
+
+  const {
+    events,
+    addEvent,
+    updateEvent,
+    deleteEvent,
+    moveEventUp,
+    moveEventDown
+  } = useEvents();
+
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
+
   const mainAreaRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [onConfirmAction, setOnConfirmAction] = useState<() => void>(() => () => { });
+
   const [successToast, setSuccessToast] = useState(false);
   const [lastAddedEventId, setLastAddedEventId] = useState<number | null>(null);
+
   const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('list');
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
-  // Parallax scroll effect for cards
   useEffect(() => {
     const handleScroll = () => {
       const cards = document.querySelectorAll('.event-card-3d');
@@ -32,21 +46,19 @@ export default function AppLayout() {
         (card as HTMLElement).style.transform = `translateY(${offset}px)`;
       });
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Auto-scroll to newly added event and highlight it
   useEffect(() => {
     if (lastAddedEventId !== null) {
       setTimeout(() => {
-        const newEventCard = document.querySelector(`[data-event-id="${lastAddedEventId}"]`);
-        if (newEventCard) {
-          newEventCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          newEventCard.classList.add('highlight-new');
-          setTimeout(() => {
-            newEventCard.classList.remove('highlight-new');
-          }, 2000);
+        const el = document.querySelector(`[data-event-id="${lastAddedEventId}"]`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('highlight-new');
+          setTimeout(() => el.classList.remove('highlight-new'), 2000);
         }
         setLastAddedEventId(null);
       }, 100);
@@ -70,46 +82,38 @@ export default function AppLayout() {
   const handleSave = (formData: EventFormData) => {
     if (editId !== null) {
       updateEvent(editId, formData);
-      showToast('✏️ Veranstaltung aktualisiert', 'success');
+      showToast(t.eventUpdated, 'success');
       setEditId(null);
     } else {
       const newEvent = addEvent(formData);
-      showToast('✅ Termin erfolgreich gespeichert', 'success');
+      showToast(t.eventSaved, 'success');
 
-      // Show success message on mobile
       setSuccessToast(true);
       setTimeout(() => setSuccessToast(false), 3000);
 
-      // Store the ID of the new event for scrolling
-      if (newEvent && newEvent.id) {
-        setLastAddedEventId(newEvent.id);
-      }
+      if (newEvent?.id) setLastAddedEventId(newEvent.id);
     }
   };
 
   const handleReset = () => {
     setEditId(null);
-    showToast('Formular zurückgesetzt', 'info');
+    showToast(t.formReset, 'info');
   };
 
   const handleEdit = (id: number) => {
     setEditId(id);
-    if (window.innerWidth <= 768) {
-      setMobileView('form');
-    }
-  };  
+    if (window.innerWidth <= 768) setMobileView('form');
+  };
 
   const handleOpenDetail = (id: number) => {
     setSelectedEventId(id);
-    if (window.innerWidth <= 768) {
-      setMobileView('detail');
-    }
+    if (window.innerWidth <= 768) setMobileView('detail');
   };
 
   const handleDelete = (id: number) => {
     setOnConfirmAction(() => () => {
       deleteEvent(id);
-      showToast('🗑️ Termin gelöscht', 'error');
+      showToast(t.eventDeleted, 'error');
       if (editId === id) setEditId(null);
     });
     setConfirmOpen(true);
@@ -117,20 +121,21 @@ export default function AppLayout() {
 
   const handleMoveUp = (index: number) => {
     moveEventUp(index);
-    showToast('⬆️ Reihenfolge geändert', 'info');
+    showToast(t.orderChanged, 'info');
   };
 
   const handleMoveDown = (index: number) => {
     moveEventDown(index);
-    showToast('⬇️ Reihenfolge geändert', 'info');
+    showToast(t.orderChanged, 'info');
   };
+
+  const filteredCount = filteredEvents.length;
 
   return (
     <>
-      {/* Success toast for mobile */}
       {successToast && (
         <div className="toast-modern">
-          ✅ Termin gespeichert — wird automatisch angezeigt
+          {t.eventSavedMobile}
         </div>
       )}
 
@@ -143,26 +148,29 @@ export default function AppLayout() {
             {mobileView === 'list' && (
               <div className="main-area" ref={mainAreaRef}>
                 <div className="events-header">
-                  <h3>📋 Stundenplan ({filteredEvents.length} Termine)</h3>
+                  <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredCount))}</h3>
+
                   <div className="filter-bar">
                     <input
                       type="text"
-                      placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
+                      placeholder={t.searchPlaceholder}
                       value={searchTerm}
                       onChange={e => setSearchTerm(e.target.value)}
                     />
                   </div>
                 </div>
+
                 <ConfirmDialog
                   isOpen={confirmOpen}
-                  title="Löschen bestätigen"
-                  message="Dieser Termin wird dauerhaft gelöscht."
+                  title={t.confirmDeleteTitle}
+                  message={t.confirmDeleteMessage}
                   onConfirm={() => {
                     onConfirmAction();
                     setConfirmOpen(false);
                   }}
                   onCancel={() => setConfirmOpen(false)}
                 />
+
                 <EventList
                   events={filteredEvents}
                   onEdit={handleEdit}
@@ -213,26 +221,29 @@ export default function AppLayout() {
 
             <div className="main-area" ref={mainAreaRef}>
               <div className="events-header">
-                <h3>📋 Stundenplan ({filteredEvents.length} Termine)</h3>
+                <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredCount))}</h3>
+
                 <div className="filter-bar">
                   <input
                     type="text"
-                    placeholder="🔍 Titel, Lehrer:in, Schüler:in ..."
+                    placeholder={t.searchPlaceholder}
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
                   />
                 </div>
               </div>
+
               <ConfirmDialog
                 isOpen={confirmOpen}
-                title="Löschen bestätigen"
-                message="Dieser Termin wird dauerhaft gelöscht."
+                title={t.confirmDeleteTitle}
+                message={t.confirmDeleteMessage}
                 onConfirm={() => {
                   onConfirmAction();
                   setConfirmOpen(false);
                 }}
                 onCancel={() => setConfirmOpen(false)}
               />
+
               <EventList
                 events={filteredEvents}
                 onEdit={handleEdit}

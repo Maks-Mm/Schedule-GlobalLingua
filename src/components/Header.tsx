@@ -1,11 +1,17 @@
-//components/Header.tsx
+// src/components/Header.tsx
+
+import LanguageToggle from './LanguageToggle';
+import { useLanguage } from '../contexts/LanguageContext';
+
 export default function Header() {
+  const { t } = useLanguage();
+
   return (
     <header className="glass-header">
       <div className="logo-area">
-        <span className="logo">GlobalLingua</span>
-        <span className="badge">ACADEMY</span>
-        <span style={{ fontSize: '0.75rem', marginLeft: '6px' }}>⚡ Orchestrator Pro</span>
+        <span className="logo">{t.appTitle}</span>
+        <span className="badge">{t.appBadge}</span>
+        <LanguageToggle />
       </div>
     </header>
   );
