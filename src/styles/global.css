@@ -457,7 +457,6 @@ body {
 
   /* Layout Override */
   .app-layout {
-    display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
     padding: 16px !important;
@@ -469,7 +468,6 @@ body {
   }
 
   .sidebar {
-    position: static !important;
     width: 100% !important;
     max-height: none !important;
     margin-bottom: 0;
@@ -481,7 +479,6 @@ body {
     max-height: none !important;
     height: auto !important;
     min-height: 50vh !important;
-    overflow-y: visible !important;
     padding: 0 !important;
     margin-top: 8px;
   }
@@ -493,6 +490,19 @@ body {
     gap: 16px;
     margin-top: 16px;
   }
+  .mobile-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.mobile-list-screen {
+  padding: 16px;
+  overflow-y: auto;
+  height: calc(100dvh - 112px); /* header + mobile-nav */
+}
 
   /* Event Cards Mobile Fix */
   .event-card-3d {

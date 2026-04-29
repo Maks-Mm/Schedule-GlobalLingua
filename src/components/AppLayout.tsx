@@ -1,3 +1,5 @@
+//src/components/AppLayout.tsx
+
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import EventCard from './EventCard';
@@ -21,6 +23,14 @@ export default function AppLayout() {
     moveEventDown
   } = useEvents();
 
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   const [editId, setEditId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null);
@@ -34,7 +44,7 @@ export default function AppLayout() {
   const [successToast, setSuccessToast] = useState(false);
   const [lastAddedEventId, setLastAddedEventId] = useState<number | null>(null);
 
-  const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('list');
+  const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('form');
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   useEffect(() => {
@@ -84,14 +94,12 @@ export default function AppLayout() {
       updateEvent(editId, formData);
       showToast(t.eventUpdated, 'success');
       setEditId(null);
+      if (isMobile) setMobileView('list');
     } else {
       const newEvent = addEvent(formData);
       showToast(t.eventSaved, 'success');
-
-      setSuccessToast(true);
-      setTimeout(() => setSuccessToast(false), 3000);
-
       if (newEvent?.id) setLastAddedEventId(newEvent.id);
+      if (isMobile) setMobileView('list');
     }
   };
 
@@ -102,12 +110,18 @@ export default function AppLayout() {
 
   const handleEdit = (id: number) => {
     setEditId(id);
-    if (window.innerWidth <= 768) setMobileView('form');
+    if (isMobile) setMobileView('form');
   };
 
   const handleOpenDetail = (id: number) => {
     setSelectedEventId(id);
-    if (window.innerWidth <= 768) setMobileView('detail');
+    if (isMobile) setMobileView('detail');
+  };
+
+  const handleMobileBack = () => {
+    if (mobileView === 'detail') setMobileView('list');
+    else if (mobileView === 'form') setMobileView('list');
+    setEditId(null);
   };
 
   const handleDelete = (id: number) => {
@@ -129,141 +143,115 @@ export default function AppLayout() {
     showToast(t.orderChanged, 'info');
   };
 
-  const filteredCount = filteredEvents.length;
+  if (isMobile) {
+    return (
+      <>
+        <div className="bg-animate" />
+        <Header />
+
+        <div className="mobile-nav">
+          {mobileView !== 'list' && (
+            <button onClick={handleMobileBack} className="back-btn">← Back</button>
+          )}
+          {mobileView === 'list' && (
+            <button onClick={() => { setEditId(null); setMobileView('form'); }} className="add-btn">+ New</button>
+          )}
+        </div>
+
+        {mobileView === 'form' && (
+          <Sidebar editId={editId} events={events} onSave={handleSave} onReset={handleReset} />
+        )}
+
+        {mobileView === 'list' && (
+          <div className="mobile-list-screen">
+            <div className="events-header">
+              <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredEvents.length))}</h3>
+              <input
+                type="text"
+                placeholder={t.searchPlaceholder}
+                value={searchTerm}
+                onChange={e => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            <EventList
+              events={filteredEvents}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onMoveUp={handleMoveUp}
+              onMoveDown={handleMoveDown}
+              onOpenDetail={handleOpenDetail}
+            />
+          </div>
+        )}
+
+        {mobileView === 'detail' && selectedEventId && (
+          <EventCard
+            event={events.find(e => e.id === selectedEventId)!}
+            index={0}
+            totalEvents={1}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onMoveUp={() => {}}
+            onMoveDown={() => {}}
+            onOpenDetail={handleOpenDetail}
+          />
+        )}
+
+        <ConfirmDialog
+          isOpen={confirmOpen}
+          title={t.confirmDeleteTitle}
+          message={t.confirmDeleteMessage}
+          onConfirm={() => { onConfirmAction(); setConfirmOpen(false); }}
+          onCancel={() => setConfirmOpen(false)}
+        />
+
+        {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      </>
+    );
+  }
 
   return (
     <>
-      {successToast && (
-        <div className="toast-modern">
-          {t.eventSavedMobile}
-        </div>
-      )}
-
       <div className="bg-animate" />
       <Header />
 
       <div className="app-layout">
-        {window.innerWidth <= 768 ? (
-          <>
-            {mobileView === 'list' && (
-              <div className="main-area" ref={mainAreaRef}>
-                <div className="events-header">
-                  <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredCount))}</h3>
+        <div className="sidebar-container" ref={sidebarRef}>
+          <Sidebar editId={editId} events={events} onSave={handleSave} onReset={handleReset} />
+        </div>
 
-                  <div className="filter-bar">
-                    <input
-                      type="text"
-                      placeholder={t.searchPlaceholder}
-                      value={searchTerm}
-                      onChange={e => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                </div>
+        <div className="main-area" ref={mainAreaRef}>
+          <div className="events-header">
+            <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredEvents.length))}</h3>
+            <input
+              type="text"
+              placeholder={t.searchPlaceholder}
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+          </div>
 
-                <ConfirmDialog
-                  isOpen={confirmOpen}
-                  title={t.confirmDeleteTitle}
-                  message={t.confirmDeleteMessage}
-                  onConfirm={() => {
-                    onConfirmAction();
-                    setConfirmOpen(false);
-                  }}
-                  onCancel={() => setConfirmOpen(false)}
-                />
+          <ConfirmDialog
+            isOpen={confirmOpen}
+            title={t.confirmDeleteTitle}
+            message={t.confirmDeleteMessage}
+            onConfirm={() => { onConfirmAction(); setConfirmOpen(false); }}
+            onCancel={() => setConfirmOpen(false)}
+          />
 
-                <EventList
-                  events={filteredEvents}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onMoveUp={handleMoveUp}
-                  onMoveDown={handleMoveDown}
-                  onOpenDetail={handleOpenDetail}
-                />
-              </div>
-            )}
-
-            {mobileView === 'form' && (
-              <div className="sidebar-container" ref={sidebarRef}>
-                <Sidebar
-                  editId={editId}
-                  events={events}
-                  onSave={handleSave}
-                  onReset={handleReset}
-                />
-              </div>
-            )}
-
-            {mobileView === 'detail' && selectedEventId && (
-              <div className="main-area" ref={mainAreaRef}>
-                <EventCard
-                  event={events.find(e => e.id === selectedEventId)!}
-                  index={0}
-                  totalEvents={1}
-                  onEdit={handleEdit}
-                  onDelete={handleDelete}
-                  onMoveUp={() => {}}
-                  onMoveDown={() => {}}
-                  onOpenDetail={handleOpenDetail}
-                />
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <div className="sidebar-container" ref={sidebarRef}>
-              <Sidebar
-                editId={editId}
-                events={events}
-                onSave={handleSave}
-                onReset={handleReset}
-              />
-            </div>
-
-            <div className="main-area" ref={mainAreaRef}>
-              <div className="events-header">
-                <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredCount))}</h3>
-
-                <div className="filter-bar">
-                  <input
-                    type="text"
-                    placeholder={t.searchPlaceholder}
-                    value={searchTerm}
-                    onChange={e => setSearchTerm(e.target.value)}
-                  />
-                </div>
-              </div>
-
-              <ConfirmDialog
-                isOpen={confirmOpen}
-                title={t.confirmDeleteTitle}
-                message={t.confirmDeleteMessage}
-                onConfirm={() => {
-                  onConfirmAction();
-                  setConfirmOpen(false);
-                }}
-                onCancel={() => setConfirmOpen(false)}
-              />
-
-              <EventList
-                events={filteredEvents}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                onMoveUp={handleMoveUp}
-                onMoveDown={handleMoveDown}
-                onOpenDetail={handleOpenDetail}
-              />
-            </div>
-          </>
-        )}
+          <EventList
+            events={filteredEvents}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onMoveUp={handleMoveUp}
+            onMoveDown={handleMoveDown}
+            onOpenDetail={handleOpenDetail}
+          />
+        </div>
       </div>
 
-      {toast && (
-        <Toast
-          message={toast.message}
-          type={toast.type}
-          onClose={() => setToast(null)}
-        />
-      )}
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
     </>
   );
 }
