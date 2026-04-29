@@ -1,5 +1,7 @@
 // components/Toast.tsx
+
 import { useEffect, useState } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 type ToastProps = {
   message: string;
@@ -10,9 +12,9 @@ type ToastProps = {
 
 export default function Toast({ message, type = 'success', duration = 3000, onClose }: ToastProps) {
   const [isLeaving, setIsLeaving] = useState(false);
+  const { t } = useLanguage(); // ✅ Added translation hook
 
   useEffect(() => {
-    // Start leaving animation before the actual unmount
     const leaveTimer = setTimeout(() => {
       setIsLeaving(true);
     }, duration - 300);
@@ -33,10 +35,11 @@ export default function Toast({ message, type = 'success', duration = 3000, onCl
     info: 'ℹ️'
   };
 
+  // ✅ Now using translated strings instead of hardcoded German
   const titles = {
-    success: 'Erfolg',
-    error: 'Fehler',
-    info: 'Information'
+    success: t.toastSuccess,
+    error: t.toastError,
+    info: t.toastInfo
   };
 
   return (

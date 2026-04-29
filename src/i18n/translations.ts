@@ -108,6 +108,10 @@ export interface Translations {
   channelMeet: string;
   channelWebex: string;
   channelInPerson: string;
+
+  toastSuccess: string;
+  toastError: string;
+  toastInfo: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -118,7 +122,7 @@ export const translations: Record<Language, Translations> = {
 
     welcomeTitle: 'Schedule GlobalLingua',
     welcomeSubtitle: 'Smart scheduling for language schools',
-    enterButton: 'Enter Dashboard →',
+    enterButton: 'Dashboard',
     heroBadge: '⚡ Orchestrator Pro',
 
     accountLocation: '🏫 Account & Location',
@@ -206,6 +210,10 @@ export const translations: Record<Language, Translations> = {
     channelMeet: 'Google Meet',
     channelWebex: 'Cisco Webex',
     channelInPerson: 'In-person',
+    
+    toastSuccess: 'Success',
+    toastError: 'Error',
+    toastInfo: 'Information',
   },
 
   de: {
@@ -303,6 +311,10 @@ export const translations: Record<Language, Translations> = {
     channelMeet: 'Google Meet',
     channelWebex: 'Cisco Webex',
     channelInPerson: 'Präsenz',
+
+    toastSuccess: 'Erfolg',
+    toastError: 'Fehler',
+    toastInfo: 'Information',
   }
 };
 
