@@ -1,12 +1,36 @@
-/* src/styles/enhanced-search.css or add to your global CSS */
+/* Dropdown anchors correctly when search bar is inside the nav */
+.mobile-nav .enhanced-search-bar.mobile-search {
+  width: 100%;
+  padding: 0;
+  transform: none;
+}
+
+.mobile-nav .enhanced-search-bar .enhanced-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+}
+/* src/styles/enhanced-search.css - Updated with mobile optimizations */
 
 .enhanced-search-bar {
   position: relative;
   width: 50%;
   max-width: 200px;
   font-family: 'Poppins', sans-serif;
-  margin-left: 0; 
-  transform: translateX(-11px); /
+  margin-left: 0;
+  transform: translateX(-11px);
+}
+
+/* Mobile specific styles */
+.enhanced-search-bar.mobile-search {
+  width: 100%;
+  max-width: 100%;
+  transform: translateX(0);
+  margin: 0;
+  padding: 0 12px;
 }
 
 .enhanced-search-input-wrapper {
@@ -37,6 +61,25 @@
   outline: none;
   color: #ffffff;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile input adjustments */
+.enhanced-search-bar.mobile-search .enhanced-search-input {
+  height: 44px;
+  font-size: 16px; /* Prevents zoom on iOS */
+  padding: 0 35px 0 42px;
+}
+
+.enhanced-search-bar.mobile-search .search-icon {
+  left: 14px;
+  width: 16px;
+  height: 16px;
+}
+
+.enhanced-search-bar.mobile-search .clear-search-btn {
+  right: 12px;
+  width: 28px;
+  height: 28px;
 }
 
 .enhanced-search-input:focus {
@@ -84,8 +127,27 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* Mobile dropdown positioning */
+.enhanced-search-bar.mobile-search .enhanced-search-dropdown {
+   position: absolute;       /* anchors to the search bar, not the viewport */
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-height: 0;
+  border-radius: 0 0 20px 20px;
+  margin-top: 0;
+  z-index: 200;
+}
+
 .enhanced-search-dropdown.open {
   max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Mobile dropdown open state */
+.enhanced-search-bar.mobile-search .enhanced-search-dropdown.open {
+  max-height: 60vh;
   overflow-y: auto;
 }
 
@@ -119,9 +181,21 @@
   color: #e5e7eb;
 }
 
+/* Mobile result items - larger touch target */
+.enhanced-search-bar.mobile-search .search-result-item {
+  padding: 14px 16px;
+  gap: 14px;
+}
+
 .search-result-item:hover {
   background: #363738;
   transform: translateX(4px);
+}
+
+/* Mobile hover effect */
+.enhanced-search-bar.mobile-search .search-result-item:active {
+  background: #363738;
+  transform: scale(0.98);
 }
 
 .result-icon {
@@ -136,6 +210,12 @@
   flex: 1;
 }
 
+/* Mobile result title */
+.enhanced-search-bar.mobile-search .result-title {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 .no-results {
   cursor: default;
   opacity: 0.7;
@@ -146,10 +226,12 @@
   transform: none;
 }
 
-/* Mobile responsive */
-@media (max-width: 768px) {
-  .enhanced-search-bar {
+/* Mobile responsive overrides */
+@media (max-width: 900px) {
+  .enhanced-search-bar:not(.mobile-search) {
     max-width: 100%;
+    transform: translateX(0);
+    width: 100%;
   }
   
   .search-result-item {
@@ -158,5 +240,34 @@
   
   .result-title {
     font-size: 12px;
+  }
+  
+  /* Better touch targets on mobile */
+  .clear-search-btn {
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-width: 900px) and (orientation: landscape) {
+  .enhanced-search-bar.mobile-search .enhanced-search-dropdown.open {
+    max-height: 40vh;
+  }
+  
+  .enhanced-search-bar.mobile-search .search-result-item {
+    padding: 10px 16px;
+  }
+}
+/* Better mobile animations + hide desktop search */
+@media (max-width: 900px) {
+  .enhanced-search-dropdown {
+    transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .events-header .enhanced-search-bar {
+    display: none !important;
+  }
+  .mobile-list-screen .events-header {
+    margin-bottom: 8px;
   }
 }

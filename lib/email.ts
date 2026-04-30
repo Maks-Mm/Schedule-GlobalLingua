@@ -27,7 +27,7 @@ export async function sendEmail(event: any) {
         <style>
           body { font-family: Arial, sans-serif; }
           .container { padding: 20px; background-color: #f5f5f5; }
-          .header { background-color: #4CAF50; color: white; padding: 10px; }
+          .header { background-color: #4caf50; color: white; padding: 10px; }
           .content { background-color: white; padding: 20px; margin-top: 10px; }
           .field { margin: 10px 0; }
           .label { font-weight: bold; color: #333; }

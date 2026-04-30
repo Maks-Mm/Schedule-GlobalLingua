@@ -1,7 +1,5 @@
 // src/components/AppLayout.tsx
 
-// src/components/AppLayout.tsx (updated version)
-
 import { useState, useEffect, useRef } from 'react';
 import Header from './Header';
 import EventCard from './EventCard';
@@ -29,12 +27,15 @@ export default function AppLayout() {
     moveEventDown
   } = useEvents();
 
-  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia('(max-width: 900px)').matches
+  );
 
   useEffect(() => {
-    const handler = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
+    const mq = window.matchMedia('(max-width: 900px)');
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
   }, []);
 
   const [editId, setEditId] = useState<number | null>(null);
@@ -49,7 +50,7 @@ export default function AppLayout() {
 
   const [lastAddedEventId, setLastAddedEventId] = useState<number | null>(null);
 
-  const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('form');
+  const [mobileView, setMobileView] = useState<'list' | 'form' | 'detail'>('list');
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
   // Prepare search results from events
@@ -112,7 +113,7 @@ export default function AppLayout() {
   };
 
   const handleSearchResultClick = (result: any) => {
-    // Optional: auto-select or highlight the event when clicked from search
+    // Auto-select or highlight the event when clicked from search
     const eventId = result.id;
     const element = document.querySelector(`[data-event-id="${eventId}"]`);
     if (element) {
@@ -201,28 +202,49 @@ export default function AppLayout() {
         <Header />
 
         <div className="mobile-nav">
-          {mobileView !== 'list' && (
-            <button 
-              onClick={handleMobileBack} 
+          {mobileView !== 'list' ? (
+            <button
+              onClick={handleMobileBack}
               className="back-btn"
               style={grayBackButtonStyle}
               onMouseEnter={(e) => {
                 e.currentTarget.style.background = '#4a4f59';
                 e.currentTarget.style.transform = 'scale(0.97)';
-                e.currentTarget.style.gap = '0.3rem';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.background = '#32363d';
                 e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.gap = '0.5rem';
               }}
             >
-              <span style={{ fontSize: '1.1em', transition: 'inherit' }}>←</span> 
+              <span style={{ fontSize: '1.1em' }}>←</span>
               <span>Back</span>
             </button>
-          )}
-          {mobileView === 'list' && (
-            <button onClick={() => { setEditId(null); setMobileView('form'); }} className="add-btn">+ New</button>
+          ) : (
+            <>
+              <EnhancedSearchBar
+                onSearch={handleSearch}
+                searchTerm={searchTerm}
+                placeholder={t.searchPlaceholder || "Search events…"}
+                results={searchResults}
+                onResultClick={handleSearchResultClick}
+                isMobile={true}
+              />
+              <button
+                onClick={() => { setEditId(null); setMobileView('form'); }}
+                style={grayBackButtonStyle}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#4a4f59';
+                  e.currentTarget.style.transform = 'scale(0.97)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = '#32363d';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <span style={{ fontSize: '1.1em' }}>+</span>
+                <span>New</span>
+              </button>
+            </>
           )}
         </div>
 
@@ -234,13 +256,7 @@ export default function AppLayout() {
           <div className="mobile-list-screen">
             <div className="events-header">
               <h3>{t.scheduleWithCount.replace('{{count}}', String(filteredEvents.length))}</h3>
-              <EnhancedSearchBar
-                onSearch={handleSearch}
-                searchTerm={searchTerm}
-                placeholder={t.searchPlaceholder || "Search events..."}
-                results={searchResults}
-                onResultClick={handleSearchResultClick}
-              />
+              {/* EnhancedSearchBar removed — now lives in mobile-nav */}
             </div>
 
             <EventList
@@ -261,8 +277,8 @@ export default function AppLayout() {
             totalEvents={1}
             onEdit={handleEdit}
             onDelete={handleDelete}
-            onMoveUp={() => {}}
-            onMoveDown={() => {}}
+            onMoveUp={() => { }}
+            onMoveDown={() => { }}
             onOpenDetail={handleOpenDetail}
           />
         )}
@@ -299,6 +315,7 @@ export default function AppLayout() {
               placeholder={t.searchPlaceholder || "Search events..."}
               results={searchResults}
               onResultClick={handleSearchResultClick}
+              isMobile={false}
             />
           </div>
 

@@ -228,7 +228,7 @@ export default function Sidebar({ editId, events, onSave, onReset }: Props) {
       <div className="card">
         <h3>{editId ? t.editMode : t.newLesson}</h3>
 
-        <button type="button" onClick={suggestNextAvailableDay} style={{ width: '100%', background: '#4CAF50', color: 'white', padding: '10px', border: 'none', borderRadius: '8px' }}>
+        <button type="button" onClick={suggestNextAvailableDay} style={{ width: '100%', background: '#3479f3', color: 'white', padding: '10px', border: 'none', borderRadius: '8px' }}>
           {t.suggestNextDay}
         </button>
 
